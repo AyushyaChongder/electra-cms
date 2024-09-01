@@ -1,8 +1,8 @@
 // src/pages/CMSHome.js
-import React from 'react';
+// import React from 'react';
 import '../styles.css'; // Import your CSS file
 import { useNavigate } from 'react-router-dom'; // Add this import
-import CMSBanner from './CMSBanner';
+// import CMSBanner from './CMSBanner';
 
 function CMSHome() {
 

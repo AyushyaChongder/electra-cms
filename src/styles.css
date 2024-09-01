@@ -206,24 +206,38 @@
 }
 
 .cms-banner-gallery {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   gap: 20px;
 }
 
 .cms-banner-box {
-  background-color: #f4f4f4;
-  border-radius: 5px;
+  border: 1px solid #ddd;
   padding: 10px;
-  width: calc(33% - 20px); /* Adjust width as needed */
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  border-radius: 5px;
 }
 
 .cms-banner-preview {
   width: 100%;
   height: auto;
-  border-radius: 5px;
+  object-fit: cover;
 }
+
+.cms-banner-details {
+  margin-top: 10px;
+}
+
+.cms-banner-index, .cms-banner-alt, .cms-banner-link, .cms-banner-mode {
+  margin: 5px 0;
+  font-size: 14px;
+}
+
+.cms-banner-loading, .cms-banner-error {
+  text-align: center;
+  padding: 20px;
+  font-size: 18px;
+}
+
 
 .cms-banner-description {
   margin: 10px 0;
