@@ -54,19 +54,7 @@ export default function Sidebar() {
         ))}
       </div>
 
-      {/* Add New Item */}
-      <div className="add-item-container">
-        <input
-          type="text"
-          value={newItemName}
-          onChange={(e) => setNewItemName(e.target.value)}
-          placeholder="New Item Name"
-          className="add-item-input"
-        />
-        <button onClick={handleAddItem} className="add-item-button">
-          Add New Item
-        </button>
-      </div>
+      
     </div>
   );
 }

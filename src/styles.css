@@ -66,41 +66,6 @@
   background-color: #FF6B2B;
 }
 
-/* Add New Item Section */
-.add-item-container {
-  margin-top: auto; /* Push this section to the bottom */
-}
-
-.add-item-input {
-  width: 87%; /* Full width with padding */
-  padding: 15px;
-  margin-bottom: 10px;
-  border: 1px solid #5d5d5d;
-  border-radius: 5px;
-  background-color: #f4f4f4;
-  color: #333;
-  font-family: 'Montserrat', sans-serif;
-  font-weight: 500;
-}
-
-.add-item-button {
-  width: 100%;
-  padding: 15px;
-  background-color: #FF6B2B;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 16px;
-  font-family: 'Montserrat', sans-serif;
-  font-weight: 500;
-}
-
-.add-item-button:hover {
-  background-color: #d05b25;
-  
-}
-
 
 /*App.jsx*/
   .app-container {
@@ -199,10 +164,33 @@
   padding: 20px;
 }
 
+.cms-banner-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
 .cms-banner-title {
   font-size: 24px;
   font-family: 'Montserrat', sans-serif;
-  margin-bottom: 20px;
+  margin: 0;
+}
+
+.cms-add-button {
+  background-color: #1468A1;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 500;
+}
+
+.cms-add-button:hover {
+  background-color: #115380;
 }
 
 .cms-banner-gallery {
@@ -238,76 +226,167 @@
   font-size: 18px;
 }
 
-
-.cms-banner-description {
-  margin: 10px 0;
-}
-
-.cms-banner-buttons {
+.cms-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
   display: flex;
-  gap: 10px;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
 }
 
-.cms-button {
+.cms-modal-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  width: 90%;
+  max-width: 500px;
+  text-align: center;
+}
+
+
+/*Banner Modal*/
+/* Modal Overlay */
+.cms-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow-y: auto; /* Allow the modal itself to scroll if needed */
+}
+
+/* Modal Content */
+.cms-modal-content {
+  background: white;
+  width: 90%;
+  max-width: 500px;
+  max-height: calc(100vh - 40px); /* Full viewport height minus margin */
+  overflow-y: auto; /* Enable vertical scrolling */
+  margin: 20px 0; /* Margin on top and bottom */
+  padding:10px 40px;
+  text-align: left;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  z-index: 1001;
+  position: relative;
+}
+
+
+.cms-modal-content h2 {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 18px;
+  color: #333;
+  margin-bottom: 15px;
+}
+
+.cms-input {
+  width: 100%;
   padding: 10px;
+  margin-bottom: 15px; /* Space between inputs */
+  border: 1px solid #ccc; /* Light border around inputs */
+  border-radius: 5px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+}
+
+.cms-input:focus {
+  border-color: #999; /* Slightly darker border on focus */
+  outline: none;
+}
+
+.cms-upload-button {
+  background-color: #FF6B2B; /* Matching button color */
+  color: white;
+  padding: 12px;
   border: none;
   border-radius: 5px;
   cursor: pointer;
   font-size: 16px;
   font-family: 'Montserrat', sans-serif;
-  font-weight: 500;
+  width: 100%; /* Button takes full width */
 }
 
-.cms-edit-button {
-  background-color: #FF6B2B;
-  color: white;
+.cms-upload-button:hover {
+  background-color: #d05b25; /* Darker on hover */
 }
 
-.cms-edit-button:hover {
-  background-color: #d05b25;
-}
-
-.cms-delete-button {
-  background-color: #e74c3c;
-  color: white;
-}
-
-.cms-delete-button:hover {
-  background-color: #c0392b;
-}
-
-.cms-banner-add-box {
-  margin-top: 20px;
-}
-
-.cms-banner-add-title {
-  font-size: 20px;
-  font-family: 'Montserrat', sans-serif;
-  margin-bottom: 10px;
-}
-
-.cms-dropzone {
-  border: 2px dashed #ccc;
+.cms-close-button {
+  background-color: transparent;
+  color: #FF6B2B; /* Matching the primary button color */
+  padding: 12px;
+  border: 2px solid #FF6B2B;
   border-radius: 5px;
-  padding: 20px;
-  text-align: center;
-  margin-bottom: 10px;
+  cursor: pointer;
+  margin-top: 10px;
+  font-size: 16px;
+  font-family: 'Montserrat', sans-serif;
+  width: 100%; /* Button takes full width */
+  margin-bottom: 25px;
+}
+
+.cms-close-button:hover {
+  background-color: #dcdcdc; /* Button becomes solid on hover */
+  ;
+}
+
+.cms-banner-preview {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  margin-bottom: 15px; /* Space between the image and other elements */
+}
+
+.cms-bannerimg-preview{
+  width: 100%;
+  margin-bottom: 5px;
+}
+
+label {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+  color: #333;
+  margin-bottom: 5px;
+  display: block;
+}
+
+.cms-action-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out; /* Smooth transition effect */
+}
+
+.cms-action-button:hover {
+  transform: scale(1.1); /* Enlarge the button slightly */
+}
+
+
+.cms-action-icon {
+  width: 20px;
+  height: 20px;
+}
+
+.cms-banner-actions {
+  display: flex;
+  justify-content: end;
+  margin-top: 10px;
+}
+
+.cms-modal-content h2 {
+  margin-bottom: 20px;
 }
 
 .cms-input {
-  width: calc(100% - 22px);
-  padding: 10px;
   margin-bottom: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  font-family: 'Montserrat', sans-serif;
-}
-
-.cms-add-button {
-  background-color: #28a745;
-  color: white;
-}
-
-.cms-add-button:hover {
-  background-color: #218838;
+  width: 100%;
 }
