@@ -13,31 +13,13 @@ function CMSHome() {
           description="Manage the Banner section" 
           editPath="/cms-banner" 
         />
-        <CMSCard 
-          title="Hero" 
-          description="Manage the Hero section" 
-          editPath="/cms-hero" 
-        />
+        
         <CMSCard 
           title="Image Slider" 
           description="Manage the Image Slider section" 
           editPath="/cms-image-slider" 
         />
-        <CMSCard 
-          title="About" 
-          description="Manage the About section" 
-          editPath="/cms-about" 
-        />
-        <CMSCard 
-          title="Vision" 
-          description="Manage the Vision section" 
-          editPath="/cms-vision" 
-        />
-        <CMSCard 
-          title="Success Cards" 
-          description="Manage the Success Cards section" 
-          editPath="/cms-success-cards" 
-        />
+       
         <CMSCard 
           title="Home Portfolio" 
           description="Manage the Home Portfolio section" 

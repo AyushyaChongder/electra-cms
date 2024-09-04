@@ -216,8 +216,10 @@
 }
 
 .cms-banner-index, .cms-banner-alt, .cms-banner-link, .cms-banner-mode {
-  margin: 5px 0;
-  font-size: 14px;
+  font-size: 15px;
+  margin-bottom: 20px;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 400;
 }
 
 .cms-banner-loading, .cms-banner-error {
@@ -389,4 +391,34 @@ label {
 .cms-input {
   margin-bottom: 10px;
   width: 100%;
+}
+
+.cms-image-preview-form{
+  width: 50%;
+  margin-bottom: 10px;
+}
+
+.add-card-box{
+  height: fit-content;
+}
+
+.add-card-button {
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.add-card-button:hover {
+  background-color: #0056b3;
+}
+
+.cms-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
 }

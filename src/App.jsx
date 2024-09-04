@@ -11,6 +11,8 @@ import CMSHome from "./components/CMSHome";
 import CMSBanner from "./components/CMSBanner";
 
 import './styles.css'
+import CMSImageSlider from "./components/CMSImageSlider";
+import CMSPortfolioSection from "./components/CMSPortfolioSection";
 
 
 export default function App() {
@@ -26,6 +28,8 @@ export default function App() {
           <Route path="/enquire" element={<Enquire/>} />
           <Route path="/cms-home" element={<CMSHome />} />
           <Route path="/cms-banner" element={<CMSBanner />} />
+          <Route path="/cms-image-slider" element={<CMSImageSlider />} />
+          <Route path="/cms-home-portfolio" element={<CMSPortfolioSection/>} />
         </Routes>
       </div>
     </div>
