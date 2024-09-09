@@ -35,11 +35,7 @@ function CMSHome() {
           description="Manage the Home Testimonials section" 
           editPath="/cms-home-testimonials" 
         />
-        <CMSCard 
-          title="Connect" 
-          description="Manage the Connect section" 
-          editPath="/cms-connect" 
-        />
+      
         <CMSCard 
           title="Footer" 
           description="Manage the Footer section" 
