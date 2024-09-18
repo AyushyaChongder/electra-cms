@@ -78,7 +78,7 @@ const CMSPortfolioSection = () => {
 
   return (
     <div className="cms-home">
-      <div className="cms-header">
+      <div className="cms-banner-header">
         <h1 className="cms-banner-title">CMS Portfolio Section</h1>
         <button className="cms-add-button " onClick={() => { setFormData({ image: '', description: '', route: '' }); setIsEditing(null); setShowModal(true); }}>
           Add Card

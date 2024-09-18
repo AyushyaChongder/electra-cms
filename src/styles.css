@@ -11,18 +11,68 @@
   }
 
 
-  /* Sidebar styles */
+ /* Sidebar styles */
 .sidebar {
   width: 250px;
   background-color: #ececec;
-  color: white;
   padding: 20px;
   display: flex;
   flex-direction: column;
-  height: auto; /* Make sidebar full-height */
+  height: 100vh; /* Make sidebar full-height */
+  color: #333; /* Changed text color for better contrast */
+  box-shadow: 2px 0 5px rgba(0,0,0,0.1); /* Add slight shadow for better visibility */
+  position: relative; /* Ensure it does not overlap other content by default */
+  top: 0;
+  left: 0;
+  transform: translateX(0); /* Visible by default on larger screens */
+  transition: transform 0.3s ease;
+  z-index: 1; /* Ensure sidebar is above other content but below overlay */
 }
 
-/* Logo at the top */
+/* Sidebar Drawer for Mobile */
+@media (max-width: 768px) {
+  .sidebar {
+    position: fixed; /* Fixed position for drawer behavior on mobile */
+    transform: translateX(-100%); /* Hide off-screen */
+    width: 80%; /* Adjust width as needed for mobile */
+    height: 100vh; /* Full height on mobile */
+    z-index: 1000; /* Ensure it appears above all other content */
+  }
+
+  .sidebar.open {
+    transform: translateX(0); /* Show when open */
+  }
+
+  /* Toggle button styles */
+  .sidebar-toggle {
+    display: block; /* Show toggle button on small screens */
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    background: #FF6B2B;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    font-size: 24px;
+    cursor: pointer;
+    z-index: 1001; /* Make sure the button is above the sidebar */
+  }
+
+  /* Adjust sidebar items for mobile view */
+  .sidebar-item {
+    font-size: 16px;
+    padding: 12px;
+  }
+}
+
+/* Hide toggle button on larger screens */
+@media (min-width: 769px) {
+  .sidebar-toggle {
+    display: none;
+  }
+}
+
 .sidebar-logo {
   text-align: center;
 }
@@ -31,7 +81,6 @@
   height: 3rem; /* Adjust the logo size */
   margin-bottom: 1rem; /* Space between the logo and the items */
 }
-
 
 /* Divider */
 .sidebar-divider {
@@ -46,11 +95,11 @@
   background-color: #909090;
   border-radius: 5px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.3s ease, transform 0.2s ease; /* Added transform for subtle hover effect */
 }
 
 .sidebar-item a {
-  color: rgb(255, 255, 255);
+  color: white; /* Keep text white */
   text-decoration: none;
   display: block;
   font-size: 18px;
@@ -59,13 +108,13 @@
 }
 
 .sidebar-item:hover {
-  background-color: #555;
+  background-color: #555; /* Darker gray on hover */
+  transform: translateX(5px); /* Slight movement on hover */
 }
 
 .sidebar-item.active {
-  background-color: #FF6B2B;
+  background-color: #FF6B2B; /* Active state with the orange color */
 }
-
 
 /*App.jsx*/
   .app-container {
@@ -85,6 +134,7 @@
 .cms-home {
   padding: 15px;
   background-color: #f4f4f4;
+  
 }
 
 .cms-title {
@@ -177,6 +227,16 @@
   margin: 0;
 }
 
+@media (max-width: 768px){
+  .cms-banner-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    margin-top: 40px;
+  }
+}
+
 .cms-add-button {
   background-color: #1468A1;
   color: white;
@@ -210,6 +270,7 @@
   height: auto;
   object-fit: cover;
 }
+
 
 .cms-banner-details {
   margin-top: 10px;
@@ -262,6 +323,40 @@
   position: relative;
 }
 
+
+@media (max-width: 768px){
+  .cms-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow-y: auto; /* Allow the modal itself to scroll if needed */
+  }
+  
+  /* Modal Content */
+  .cms-modal-content {
+    background: white;
+    width: 90%;
+    max-width: 500px;
+    max-height: calc(100vh - 40px); /* Full viewport height minus margin */
+    overflow-y: auto; /* Enable vertical scrolling */
+    margin: 20px 15px; /* Margin on top and bottom */
+    padding:10px 40px;
+    text-align: left;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 1001;
+    position: relative;
+  }
+  
+  
+}
 
 .cms-modal-content h2 {
   font-family: 'Montserrat', sans-serif;
@@ -471,4 +566,85 @@ label {
 
 .cms-no-button:hover {
   background-color: #999; /* Darker on hover */
+}
+
+/*CMS Home Clients*/
+.cms-client-preview {
+  width: 50%;
+}
+
+/*CMS Home Testimonials*/
+.cms-testimonial-preview {
+  width: 50%;
+}
+
+/*Service Page CMS*/
+
+.services-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  gap: 10px;
+}
+
+.service-btn {
+  background-color: white;
+  border: 2px solid #e0e0e0;
+  border-radius: 30px;
+  padding: 10px 20px;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: all 0.1s ease;
+  cursor: pointer;
+}
+
+.service-btn i {
+  font-size: 18px;
+}
+
+/* For the active button */
+.service-btn.active {
+  background-color: #007bff;
+  color: white;
+}
+
+.service-btn.active i {
+  color: white;
+}
+
+/* Hover effect */
+.service-btn:hover {
+  background-color: #007bff;
+  color: white;
+}
+
+/* Icon classes - you can use FontAwesome or another icon library for the actual icons */
+.icon {
+  background-size: contain;
+}
+
+.design-icon {
+  background-image: url('/path-to-your-icons/design-icon.png');
+}
+
+.install-icon {
+  background-image: url('/path-to-your-icons/install-icon.png');
+}
+
+.panel-icon {
+  background-image: url('/path-to-your-icons/panel-icon.png');
+}
+
+.approval-icon {
+  background-image: url('/path-to-your-icons/approval-icon.png');
+}
+
+.repair-icon {
+  background-image: url('/path-to-your-icons/repair-icon.png');
+}
+
+.value-icon {
+  background-image: url('/path-to-your-icons/value-icon.png');
 }

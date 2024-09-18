@@ -7,54 +7,60 @@ import '../styles.css';
 export default function Sidebar() {
   const location = useLocation();
   const [active, setActive] = useState(location.pathname);
-  const [sidebarItems, setSidebarItems] = useState([
+  const [isOpen, setIsOpen] = useState(false); // State to manage sidebar open/close
+
+  const sidebarItems = [
     { path: '/', name: 'Home' },
     { path: '/aboutus', name: 'About Us' },
-    { path: '/projectsectorial', name: 'Project Sectorial' },
+    { path: '/projectsectorial', name: 'Portfolio Projects' },
     { path: '/allprojects', name: 'All Projects' },
+    { path: '/services', name: 'Services' },
     { path: '/enquire', name: 'Enquire' },
-  ]);
-  const [newItemName, setNewItemName] = useState('');
+    { path: '/footer', name: 'Footer' },
+  ];
 
   const handleClick = (path) => {
     setActive(path);
-  };
-
-  const handleAddItem = () => {
-    if (newItemName.trim()) {
-      const newPath = `/${newItemName.toLowerCase().replace(/\s+/g, '')}`;
-      setSidebarItems([...sidebarItems, { path: newPath, name: newItemName }]);
-      setNewItemName(''); // Clear the input field
+    if (window.innerWidth <= 768) {
+      setIsOpen(false); // Close sidebar on item click in mobile view
     }
   };
 
+  const toggleSidebar = () => {
+    setIsOpen(!isOpen);
+  };
+
   return (
-    <div className="sidebar">
-      {/* Logo at the top */}
-      <div className="sidebar-logo">
-        <Link to="/">
-          <img src={logo} alt="Logo" />
-        </Link>
-      </div>
-      
-      {/* Divider */}
-      <div className="sidebar-divider"></div>
-     
+    <div>
+      {/* Toggle Button for Mobile */}
+      <button className="sidebar-toggle" onClick={toggleSidebar}>
+        ☰
+      </button>
 
-      {/* Sidebar Items */}
-      <div>
-        {sidebarItems.map((item) => (
-          <div
-            key={item.path}
-            className={`sidebar-item ${active === item.path ? 'active' : ''}`}
-            onClick={() => handleClick(item.path)}
-          >
-            <Link to={item.path}>{item.name}</Link>
-          </div>
-        ))}
+      <div className={`sidebar ${isOpen ? 'open' : ''}`}>
+        {/* Logo at the top */}
+        <div className="sidebar-logo">
+          <Link to="/">
+            <img src={logo} alt="Logo" />
+          </Link>
+        </div>
+        
+        {/* Divider */}
+        <div className="sidebar-divider"></div>
+       
+        {/* Sidebar Items */}
+        <div>
+          {sidebarItems.map((item) => (
+            <div
+              key={item.path}
+              className={`sidebar-item ${active === item.path ? 'active' : ''}`}
+              onClick={() => handleClick(item.path)}
+            >
+              <Link to={item.path}>{item.name}</Link>
+            </div>
+          ))}
+        </div>
       </div>
-
-      
     </div>
   );
 }

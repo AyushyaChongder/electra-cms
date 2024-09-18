@@ -15,9 +15,9 @@ function CMSHome() {
         />
         
         <CMSCard 
-          title="Image Slider" 
-          description="Manage the Image Slider section" 
-          editPath="/cms-image-slider" 
+          title="Service Cards" 
+          description="Manage the Service Cards section" 
+          editPath="/cms-service-cards" 
         />
        
         <CMSCard 
@@ -36,11 +36,7 @@ function CMSHome() {
           editPath="/cms-home-testimonials" 
         />
       
-        <CMSCard 
-          title="Footer" 
-          description="Manage the Footer section" 
-          editPath="/cms-footer" 
-        />
+    
       </div>
     </div>
   );

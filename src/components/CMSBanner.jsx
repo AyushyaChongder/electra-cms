@@ -9,8 +9,6 @@ function CMSBanner() {
   const [error, setError] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false); // State for confirmation modal
-  const [deleteBannerId, setDeleteBannerId] = useState(null);
-  const [isDeleteConfirmModalOpen, setIsDeleteConfirmModalOpen] = useState(false);
   const [formData, setFormData] = useState({
     id: null, // Track the id of the banner being edited
     position: "",
