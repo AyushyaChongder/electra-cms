@@ -1,7 +1,7 @@
 import React from 'react';
 import '../styles.css'; // Import your CSS file
 import CMSCard from '../components/CMSCard'; // Import the CMSCard component
-
+import { Link } from 'react-router-dom'; // Assuming you're using react-router for navigation
 
 function CMSHome() {
   return (
@@ -9,11 +9,11 @@ function CMSHome() {
       {/* Header section with title and login button */}
       <div className="cms-header flex justify-between items-center p-4">
         <h1 className="cms-title">Home Dashboard</h1>
-        {/* <Link to="/login">
+        <Link to="/login">
           <button className="cms-button">
             Login
           </button>
-        </Link> */}
+        </Link>
       </div>
 
       {/* Content section with CMS cards */}

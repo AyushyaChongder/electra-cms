@@ -19,6 +19,7 @@ import CMSTestimonial from "./components/CMSTestimonial";
 import CMSAboutusHeaderImage from "./components/CMSAboutUsHeaderImage";
 import CMSAboutusStatistics from "./components/CMSAboutUsStatistics";
 import CMSAboutUsIntegrityCarousel from "./components/CMSAboutUsIntegrityCarousel";
+import CMSLogin from "./components/CMSLogin";
 
 export default function App() {
 
@@ -33,7 +34,7 @@ export default function App() {
           <Route path="/allprojects" element={<AllProjects/>}/>
           <Route path="/enquire" element={<Enquire/>} />
           <Route path="/services" element={<Services/>}/>
-
+          <Route path="/login" element={<CMSLogin/>}/>
           <Route path="/cms-home" element={<CMSHome />} />
           <Route path="/cms-banner" element={<CMSBanner />} />
           <Route path="/cms-service-cards" element={<CMSServiceCards />} />
