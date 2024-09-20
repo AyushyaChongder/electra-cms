@@ -16,18 +16,15 @@ import CMSPortfolioSection from "./components/CMSPortfolioSection";
 import CMSClients from "./components/CMSClients";
 import CMSServiceCards from "./components/CMSServiceCards";
 import CMSTestimonial from "./components/CMSTestimonial";
-import CMSLogin from "./components/CMSLogin";
 import CMSAboutusHeaderImage from "./components/CMSAboutusHeaderImage";
 import CMSAboutusStatistics from "./components/CMSAboutUsStatistics";
 import CMSAboutUsIntegrityCarousel from "./components/CMSAboutusIntegrityCarousel";
 
 export default function App() {
-  const location = useLocation();
-  const isLoginPage = location.pathname === "/login";
 
   return (
     <div className="app-container">
-      {!isLoginPage && <Sidebar />}
+      <Sidebar />
       <div className="content-container">
         <Routes>
           <Route path="/" element={<Home/>}/>
