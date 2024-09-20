@@ -16,9 +16,9 @@ import CMSPortfolioSection from "./components/CMSPortfolioSection";
 import CMSClients from "./components/CMSClients";
 import CMSServiceCards from "./components/CMSServiceCards";
 import CMSTestimonial from "./components/CMSTestimonial";
-import CMSAboutusHeaderImage from "./components/CMSAboutusHeaderImage";
+import CMSAboutusHeaderImage from "./components/CMSAboutUsHeaderImage";
 import CMSAboutusStatistics from "./components/CMSAboutUsStatistics";
-import CMSAboutUsIntegrityCarousel from "./components/CMSAboutusIntegrityCarousel";
+import CMSAboutUsIntegrityCarousel from "./components/CMSAboutUsIntegrityCarousel";
 
 export default function App() {
 
