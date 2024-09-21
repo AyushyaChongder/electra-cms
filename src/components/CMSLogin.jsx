@@ -37,7 +37,7 @@ function CMSLogin({ onLogin }) {
 
         {/* Right Side - Login Form */}
         <div className="login-right">
-          <h2 className="login-form-heading montserrat-regular">Welcome To Electra Power</h2>
+          <h2 className="login-form-heading montserrat-regular">Electrapower - CMS</h2>
           
           {error && <p className="error-message montserrat-regular" style={{color: 'red', marginBottom: '10px'}}>{error}</p>}
           
@@ -66,14 +66,14 @@ function CMSLogin({ onLogin }) {
                 />
               </div>
             </div>
-            <div className="login-form-agreement flex items-center justify-between">
+            {/* <div className="login-form-agreement flex items-center justify-between">
               <label className="flex items-center montserrat-regular">
                 <input type="checkbox" className="login-form-checkbox montserrat-regular" />
                 <span className="login-agreement-text montserrat-regular">
                   I agree to all <a href="#" className="login-text-link montserrat-regular">End User Agreement</a> and <a href="#" className="login-text-link montserrat-regular">Policies</a>.
                 </span>
               </label>
-            </div>
+            </div> */}
             <button type="submit" className="cms-upload-button montserrat-regular">Sign In</button>
           </form>
           <div className="text-center login-forgot-password ">
