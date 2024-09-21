@@ -117,6 +117,7 @@
 }
 
 .logout-button {
+  color: white;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -125,14 +126,22 @@
   background-color: transparent;
   color: inherit; /* This will make the text color match the sidebar text color */
   border: 1px solid #ddd;
-  border-radius: 4px;
+  border-radius: 5px;
   cursor: pointer;
   font-size: 16px;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 500;
   transition: background-color 0.3s;
+  background-color: #909090;
 }
 
 .logout-button:hover {
-  background-color: rgba(0, 0, 0, 0.05);
+  background-color: #555;
+}
+
+.logout-button span{
+  color: white;
+  font-weight: 500;
 }
 
 .logout-button svg {
