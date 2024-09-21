@@ -1,9 +1,28 @@
-import React from 'react';
-import "../styles.css"; // Import your CSS file
+import React, { useState } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import "../styles.css";
 import loginimage from "../assets/img/login_vector.png"
 import googlelogo from "../assets/img/search.png"
 
-function CMSLogin() {
+function CMSLogin({ onLogin }) {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (username === 'electrapower' && password === '12345') {
+      setError('');
+      onLogin();
+      const from = location.state?.from?.pathname || "/";
+      navigate(from, { replace: true });
+    } else {
+      setError('Invalid username or password. Please try again.');
+    }
+  };
+
   return (
     <div className="login-container">
       <div className="login-content">
@@ -14,21 +33,24 @@ function CMSLogin() {
             alt="Support Illustration" 
             className="login-image" 
           />
-
         </div>
 
         {/* Right Side - Login Form */}
         <div className="login-right">
           <h2 className="login-form-heading montserrat-regular">Welcome To Electra Power</h2>
           
-          <form>
+          {error && <p className="error-message montserrat-regular" style={{color: 'red', marginBottom: '10px'}}>{error}</p>}
+          
+          <form onSubmit={handleSubmit}>
             <div className="login-form-group">
-              <label htmlFor="email" className="login-form-label montserrat-regular">Email Address</label>
+              <label htmlFor="username" className="login-form-label montserrat-regular">Username</label>
               <input
-                type="email"
-                id="email"
+                type="text"
+                id="username"
                 className="login-form-input montserrat-regular"
-                placeholder="Email Address"
+                placeholder="Username"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
               />
             </div>
             <div className="login-form-group">
@@ -39,8 +61,9 @@ function CMSLogin() {
                   id="password"
                   className="login-form-input montserrat-regular"
                   placeholder="Password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                 />
-                
               </div>
             </div>
             <div className="login-form-agreement flex items-center justify-between">
@@ -51,12 +74,11 @@ function CMSLogin() {
                 </span>
               </label>
             </div>
-            <button className="cms-upload-button montserrat-regular">Sign In</button>
+            <button type="submit" className="cms-upload-button montserrat-regular">Sign In</button>
           </form>
           <div className="text-center login-forgot-password ">
             <a href="#" className="login-text-link montserrat-regular">Forgot password?</a>
           </div>
-          
         </div>
       </div>
     </div>

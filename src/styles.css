@@ -116,6 +116,29 @@
   background-color: #FF6B2B; /* Active state with the orange color */
 }
 
+.logout-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 10px;
+  background-color: transparent;
+  color: inherit; /* This will make the text color match the sidebar text color */
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s;
+}
+
+.logout-button:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.logout-button svg {
+  margin-right: 10px;
+}
+
 /*App.jsx*/
   .app-container {
     display: flex;

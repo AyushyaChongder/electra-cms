@@ -9,11 +9,7 @@ function CMSHome() {
       {/* Header section with title and login button */}
       <div className="cms-header flex justify-between items-center p-4">
         <h1 className="cms-title">Home Dashboard</h1>
-        <Link to="/login">
-          <button className="cms-button">
-            Login
-          </button>
-        </Link>
+        
       </div>
 
       {/* Content section with CMS cards */}

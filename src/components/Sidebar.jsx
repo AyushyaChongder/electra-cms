@@ -1,13 +1,14 @@
-// src/components/Sidebar/Sidebar.js
 import React, { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import logo from '../assets/img/logo_a.png'; // Import the logo image
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { LogOut } from 'lucide-react'; // Import the LogOut icon
+import logo from '../assets/img/logo_a.png';
 import '../styles.css';
 
-export default function Sidebar() {
+export default function Sidebar({ onLogout }) {
   const location = useLocation();
+  const navigate = useNavigate();
   const [active, setActive] = useState(location.pathname);
-  const [isOpen, setIsOpen] = useState(false); // State to manage sidebar open/close
+  const [isOpen, setIsOpen] = useState(false);
 
   const sidebarItems = [
     { path: '/', name: 'Home' },
@@ -22,7 +23,7 @@ export default function Sidebar() {
   const handleClick = (path) => {
     setActive(path);
     if (window.innerWidth <= 768) {
-      setIsOpen(false); // Close sidebar on item click in mobile view
+      setIsOpen(false);
     }
   };
 
@@ -30,26 +31,27 @@ export default function Sidebar() {
     setIsOpen(!isOpen);
   };
 
+  const handleLogout = () => {
+    onLogout();
+    navigate('/login');
+  };
+
   return (
     <div>
-      {/* Toggle Button for Mobile */}
       <button className="sidebar-toggle" onClick={toggleSidebar}>
         ☰
       </button>
 
       <div className={`sidebar ${isOpen ? 'open' : ''}`}>
-        {/* Logo at the top */}
         <div className="sidebar-logo">
           <Link to="/">
             <img src={logo} alt="Logo" />
           </Link>
         </div>
         
-        {/* Divider */}
         <div className="sidebar-divider"></div>
        
-        {/* Sidebar Items */}
-        <div>
+        <div className="sidebar-items">
           {sidebarItems.map((item) => (
             <div
               key={item.path}
@@ -59,6 +61,14 @@ export default function Sidebar() {
               <Link to={item.path}>{item.name}</Link>
             </div>
           ))}
+        </div>
+
+        {/* Logout button at the bottom */}
+        <div className="sidebar-footer">
+          <button onClick={handleLogout} className="logout-button">
+            <LogOut size={20} />
+            <span>Logout</span>
+          </button>
         </div>
       </div>
     </div>
