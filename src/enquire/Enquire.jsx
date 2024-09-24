@@ -1,8 +1,11 @@
 import React from 'react'
+import CMSEnquire from '../components/CMSEnquire'
 
 function Enquire() {
   return (
-    <div>Enquire</div>
+    <>
+      <CMSEnquire/>
+    </>
   )
 }
 

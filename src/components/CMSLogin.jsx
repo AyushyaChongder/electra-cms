@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import "../styles.css";
-import loginimage from "../assets/img/login_vector.png"
-import googlelogo from "../assets/img/search.png"
+import loginimage from "../assets/img/login_vector.png";
+import googlelogo from "../assets/img/search.png";
 
 function CMSLogin({ onLogin }) {
   const [username, setUsername] = useState('');
@@ -13,11 +13,15 @@ function CMSLogin({ onLogin }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    // Check if the username and password match the expected values
     if (username === 'electrapower' && password === '12345') {
       setError('');
-      onLogin();
+      onLogin();  // Call the parent component's login function to set isAuthenticated
+
+      // Redirect to the home page or previous page if login is successful
       const from = location.state?.from?.pathname || "/";
-      navigate(from, { replace: true });
+      navigate(from, { replace: true });  // Navigate to the desired route after login
     } else {
       setError('Invalid username or password. Please try again.');
     }
