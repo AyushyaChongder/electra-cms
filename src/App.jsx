@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Route, Routes, Navigate, useLocation } from "react-router-dom";
-import './styles.css'
+import './styles.css';
 
 import Sidebar from "./components/Sidebar";
 import Home from "./home/Home";
@@ -19,8 +19,11 @@ import CMSAboutusHeaderImage from "./components/CMSAboutUsHeaderImage";
 import CMSAboutusStatistics from "./components/CMSAboutUsStatistics";
 import CMSAboutUsIntegrityCarousel from "./components/CMSAboutUsIntegrityCarousel";
 import CMSLogin from "./components/CMSLogin";
+import CMSEnquireEmailID from "./components/CMSEnquireEmailID";
+import CMSEnquireOfficeAddress from "./components/CMSEnquireOfficeAddress";
+import CMSEnquireContactNumber from "./components/CMSEnquireContactNumber";
 
-// New ProtectedRoute component
+// New ProtectedRoute component to secure routes
 const ProtectedRoute = ({ children }) => {
   const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true';
   const location = useLocation();
@@ -36,23 +39,26 @@ export default function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(localStorage.getItem('isAuthenticated') === 'true');
 
   const handleLogin = () => {
-    // Implement your login logic here
-    // For demonstration, we'll just set isAuthenticated to true
+    // On successful login, update the authentication state and localStorage
     setIsAuthenticated(true);
     localStorage.setItem('isAuthenticated', 'true');
   };
 
   const handleLogout = () => {
+    // On logout, reset the authentication state and clear localStorage
     setIsAuthenticated(false);
     localStorage.removeItem('isAuthenticated');
   };
 
   return (
     <div className="app-container">
-      {isAuthenticated && <Sidebar onLogout={handleLogout} />}
+      {isAuthenticated && <Sidebar onLogout={handleLogout} />}  {/* Show sidebar only if authenticated */}
       <div className="content-container">
         <Routes>
+          {/* Public route */}
           <Route path="/login" element={<CMSLogin onLogin={handleLogin} />} />
+
+          {/* Protected routes */}
           <Route path="/" element={
             <ProtectedRoute>
               <Home />
@@ -128,6 +134,22 @@ export default function App() {
               <CMSAboutUsIntegrityCarousel />
             </ProtectedRoute>
           } />
+          <Route path="/cms-enquire-emailid" element={
+            <ProtectedRoute>
+              <CMSEnquireEmailID/>
+            </ProtectedRoute>
+          } />
+          <Route path="/cms-enquire-address" element={
+            <ProtectedRoute>
+              <CMSEnquireOfficeAddress/>
+            </ProtectedRoute>
+          } />
+          <Route path="/cms-enquire-contact" element={
+            <ProtectedRoute>
+              <CMSEnquireContactNumber/>
+            </ProtectedRoute>
+          } />
+          {/* Fallback route */}
           <Route path="*" element={<Navigate to="/login" replace />} />
         </Routes>
       </div>

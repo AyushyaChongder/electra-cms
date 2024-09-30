@@ -65,7 +65,7 @@ export default function Sidebar({ onLogout }) {
 
         {/* Logout button at the bottom */}
         <div className="sidebar-footer">
-          <button onClick={handleLogout} className="logout-button">
+          <button onClick={handleLogout} className="cms-upload-button">
             <LogOut size={20} />
             <span>Logout</span>
           </button>

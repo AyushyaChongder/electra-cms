@@ -1,18 +1,23 @@
 import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import "../styles.css";
-import loginimage from "../assets/img/login_vector.png"
-import googlelogo from "../assets/img/search.png"
+import loginimage from "../assets/img/login_vector.png";
+import googlelogo from "../assets/img/search.png";
 
 function CMSLogin({ onLogin }) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [isModalOpen, setIsModalOpen] = useState(false); // Modal visibility state
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [modalError, setModalError] = useState('');
   const navigate = useNavigate();
   const location = useLocation();
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
     if (username === 'electrapower' && password === '12345') {
       setError('');
       onLogin();
@@ -23,10 +28,26 @@ function CMSLogin({ onLogin }) {
     }
   };
 
+  // Handle forgot password modal submission
+  const handleModalSubmit = (e) => {
+    e.preventDefault();
+
+    // Check if new passwords match
+    if (newPassword !== confirmPassword) {
+      setModalError('Passwords do not match. Please try again.');
+    } else {
+      setModalError('');
+      // You can add logic here to handle password reset (e.g., API call).
+      console.log("Password reset successful!");
+
+      // Close the modal after successful password reset
+      setIsModalOpen(false);
+    }
+  };
+
   return (
     <div className="login-container">
       <div className="login-content">
-        {/* Left Side - Image and Text */}
         <div className="login-left">
           <img 
             src={loginimage} 
@@ -35,7 +56,6 @@ function CMSLogin({ onLogin }) {
           />
         </div>
 
-        {/* Right Side - Login Form */}
         <div className="login-right">
           <h2 className="login-form-heading montserrat-regular">Electrapower - CMS</h2>
           
@@ -76,11 +96,59 @@ function CMSLogin({ onLogin }) {
             </div> */}
             <button type="submit" className="cms-upload-button montserrat-regular">Sign In</button>
           </form>
-          <div className="text-center login-forgot-password ">
-            <a href="#" className="login-text-link montserrat-regular">Forgot password?</a>
+          <div className="text-center login-forgot-password">
+            <a 
+              href="#" 
+              className="login-text-link montserrat-regular"
+              onClick={() => setIsModalOpen(true)}  // Open modal on click
+            >
+              Forgot password?
+            </a>
           </div>
         </div>
       </div>
+
+      {/* Forgot Password Modal */}
+      {isModalOpen && (
+        <div className="cms-modal-overlay">
+          <div className="cms-modal-content">
+            <h2 className="montserrat-regular">Reset Your Password</h2>
+            {modalError && <p className="error-message montserrat-regular" style={{color: 'red', marginBottom: '10px'}}>{modalError}</p>}
+            <form onSubmit={handleModalSubmit}>
+              <label className="montserrat-regular">
+                New Password:
+                <input
+                  type="password"
+                  className="cms-input"
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                  required
+                />
+              </label>
+              <label className="montserrat-regular">
+                Confirm Password:
+                <input
+                  type="password"
+                  className="cms-input"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  required
+                />
+              </label>
+              <div className="modal-button-container">
+                <button type="submit" className="cms-upload-button montserrat-regular">Submit</button>
+                <button
+                  type="button"
+                  className="cms-close-button montserrat-regular"
+                  onClick={() => setIsModalOpen(false)}  // Close modal on cancel
+                >
+                  Cancel
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
