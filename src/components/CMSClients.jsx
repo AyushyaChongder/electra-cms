@@ -1,75 +1,115 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios"; // Ensure axios is imported
 import "../styles.css"; // Import your CSS file
 import Pencil from "../assets/img/pencil.png";
 import Dustbin from "../assets/img/dustbin.png";
 
-
-// Import all client images
-import Client1 from "../assets/img/cl1.png";
-import Client2 from "../assets/img/cl2.png";
-import Client3 from "../assets/img/cl3.png";
-import Client4 from "../assets/img/cl4.png";
-import Client5 from "../assets/img/cl5.png";
-import Client6 from "../assets/img/cl6.png";
-import Client7 from "../assets/img/cl7.png";
-import Client8 from "../assets/img/cl8.png";
-import Client9 from "../assets/img/cl9.png";
-import Client10 from "../assets/img/cl10.png";
-import Client11 from "../assets/img/cl11.png";
-import Client12 from "../assets/img/cl12.png";
-import Client13 from "../assets/img/cl14.png";
-import Client15 from "../assets/img/cl16.png";
-import Client16 from "../assets/img/cl17.png";
-import Client17 from "../assets/img/cl18.png";
-import Client18 from "../assets/img/cl19.png";
-import Client19 from "../assets/img/cl20.png";
-import Client20 from "../assets/img/cl211.png";
-import Client21 from "../assets/img/cl222.png";
-import Client22 from "../assets/img/cl233.png";
-
-// Initial client data with IDs
-const initialClients = [
-  { id: 1, src: Client1, alt: "Client 1" },
-  { id: 2, src: Client2, alt: "Client 2" },
-  { id: 3, src: Client3, alt: "Client 3" },
-  { id: 4, src: Client4, alt: "Client 4" },
-  { id: 5, src: Client5, alt: "Client 5" },
-  { id: 6, src: Client6, alt: "Client 6" },
-  { id: 7, src: Client7, alt: "Client 7" },
-  { id: 8, src: Client8, alt: "Client 8" },
-  { id: 9, src: Client9, alt: "Client 9" },
-  { id: 10, src: Client10, alt: "Client 10" },
-  { id: 11, src: Client11, alt: "Client 11" },
-  { id: 12, src: Client12, alt: "Client 12" },
-  { id: 13, src: Client13, alt: "Client 13" },
-  { id: 14, src: Client15, alt: "Client 15" }, // Skipped id 14 for Client14
-  { id: 15, src: Client16, alt: "Client 16" },
-  { id: 16, src: Client17, alt: "Client 17" },
-  { id: 17, src: Client18, alt: "Client 18" },
-  { id: 18, src: Client19, alt: "Client 19" },
-  { id: 19, src: Client20, alt: "Client 20" },
-  { id: 20, src: Client21, alt: "Client 21" },
-  { id: 21, src: Client22, alt: "Client 22" },
-];
-
 const CMSClients = () => {
-  const [clients, setClients] = useState(initialClients);
+  const [clients, setClients] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
+  const [formData, setFormData] = useState({
+    id: null,
+    imageFile: null,
+    imagePreview: "",
+  });
+
+  // Fetch client logos from the API when the component mounts
+  useEffect(() => {
+    const fetchClientLogos = async () => {
+      try {
+        const response = await fetch(
+          "https://4m6h7psse2.execute-api.ap-south-1.amazonaws.com/v1/getClientLogoURLs"
+        );
+        if (!response.ok) {
+          throw new Error("Failed to fetch client logos");
+        }
+        const data = await response.json();
+        const fetchedClients = data.map((url, index) => ({
+          id: index + 1,
+          src: url,
+          alt: `Client ${index + 1}`, // You can keep this for alt attributes but won't show it
+        }));
+        setClients(fetchedClients);
+      } catch (error) {
+        console.error("Error fetching clients data:", error);
+        setError("Failed to fetch clients. Please try again later.");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchClientLogos();
+  }, []);
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    const reader = new FileReader();
+    
+    reader.onloadend = () => {
+      setFormData((prevData) => ({
+        ...prevData,
+        imageFile: file,
+        imagePreview: reader.result,
+      }));
+    };
+    
+    if (file) {
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleUploadImage = async () => {
+    const { imageFile } = formData; // Destructure formData
+    if (!imageFile) return;
+
+    const fileName = imageFile.name;
+    const reader = new FileReader();
+    
+    reader.onloadend = async () => {
+      const fileData = reader.result.split(",")[1]; // Base64 file data
+
+      try {
+        const response = await axios.post('https://b1fdsnzm5i.execute-api.ap-south-1.amazonaws.com/v1/uploadClientImageS3', {
+          file_name: fileName,
+          file_data: fileData,
+        });
+
+        if (response.data.status_code === 200) {
+          const newClient = {
+            id: clients.length + 1,
+            src: response.data.object_url,
+          };
+          setClients((prevClients) => [...prevClients, newClient]); // Use functional state update
+          handleCloseModal(); // Close modal after successful upload
+        }
+      } catch (err) {
+        console.error('Error uploading image:', err);
+      }
+    };
+
+    reader.readAsDataURL(imageFile); // Convert image to base64
+  };
 
   const handleAddNewClick = () => {
     setIsEditing(false);
+    setFormData({
+      id: null,
+      imageFile: null,
+      imagePreview: "",
+    });
     setIsModalOpen(true);
   };
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
-}
+  };
 
-const handleConfirmModalSubmit = async () => {
+  const handleConfirmModalSubmit = async () => {
+    await handleUploadImage(); // Call upload function on confirm
     setIsConfirmModalOpen(false);
   };
 
@@ -77,9 +117,29 @@ const handleConfirmModalSubmit = async () => {
     setIsConfirmModalOpen(false);
   };
 
+  // Function to delete a client logo
+  const handleDeleteClient = async (client) => {
+    try {
+      // Assuming the client object has a src property which contains the URL
+      const fileName = client.src.split("/").pop(); // Extract file name from URL
+  
+      // Make a DELETE request to your API
+      const response = await axios.delete(`https://veiar5qy8i.execute-api.ap-south-1.amazonaws.com/v1/deleteClientLogo`, {
+        data: { file_name: fileName }, // Sending the file name in the request body
+      });
+  
+      if (response.status === 200) {
+        setClients((prevClients) => prevClients.filter(c => c.id !== client.id)); // Remove client from state
+        console.log("Client logo deleted successfully.");
+      }
+    } catch (error) {
+      console.error('Error deleting image:', error);
+    }
+  };
+
   return (
     <div className="cms-home">
-      <div className="cms-header">
+      <div className="cms-banner-header">
         <h2 className="cms-banner-title">Clients Section</h2>
         <button className="cms-add-button" onClick={handleAddNewClick}>
           Add Client
@@ -92,21 +152,28 @@ const handleConfirmModalSubmit = async () => {
           <div key={client.id} className="cms-box">
             <img
               src={client.src}
-              alt={client.alt}
+              alt={`Client Logo ${client.id}`} // Using a default alt text for accessibility
               className="cms-client-preview"
             />
             <div className="cms-box-content">
-              <p className="cms-box-description">{client.alt}</p>
               <div className="cms-box-actions">
                 <button
                   className="cms-action-button banner-edit-button"
-                 
+                  onClick={() => {
+                    setIsEditing(true);
+                    setFormData({
+                      id: client.id,
+                      imageFile: null,
+                      imagePreview: client.src,
+                    });
+                    setIsModalOpen(true);
+                  }}
                 >
                   <img src={Pencil} alt="Edit" className="cms-action-icon" />
                 </button>
                 <button
                   className="cms-action-button banner-delete-button"
-                  
+                  onClick={() => handleDeleteClient(client)} // Call the delete function
                 >
                   <img src={Dustbin} alt="Delete" className="cms-action-icon" />
                 </button>
@@ -129,36 +196,23 @@ const handleConfirmModalSubmit = async () => {
               }}
             >
               <label>
-                Alt Text
-                <input
-                  type="text"
-                  name="altText"
-                  className="cms-input"
-                  value={initialClients.alt}
-                  
-                />
-              </label>
-              <label>
                 Client Logo:
                 <input
                   type="file"
                   name="imageFile"
                   accept="image/*"
                   className="cms-input"
-                  
+                  onChange={handleFileChange} // Call handleFileChange
                 />
               </label>
-              {initialClients.src && (
-                
-                  <img src={initialClients.src} alt="Preview" className="cms-bannerimg-preview" />
-              
+              {formData.imagePreview && ( // Use formData.imagePreview
+                <img src={formData.imagePreview} alt="Preview" className="cms-bannerimg-preview" />
               )}
-             
 
               <button type="submit" className="cms-upload-button">
-                {isEditing ? "Update Card" : "Add Card"}
+                {isEditing ? "Update Client" : "Add Client"}
               </button>
-              <button className="cms-close-button" onClick={handleCloseModal}>
+              <button type="button" className="cms-close-button" onClick={handleCloseModal}>
                 Cancel
               </button>
             </form>
@@ -166,19 +220,16 @@ const handleConfirmModalSubmit = async () => {
         </div>
       )}
 
-{isConfirmModalOpen && (
+      {isConfirmModalOpen && (
         <div className="cms-modal-overlay">
           <div className="cms-confirm-modal-content">
-          <h2>Confirm Submission</h2>
-          <p>Are you sure you want to submit the changes?</p>
+            <h2>Confirm Submission</h2>
+            <p>Are you sure you want to submit the changes?</p>
             <div className="cms-button-container">
               <button className="cms-yes-button" onClick={handleConfirmModalSubmit}>
                 Yes
               </button>
-              <button
-                className="cms-no-button"
-                onClick={handleConfirmModalClose}
-              >
+              <button className="cms-no-button" onClick={handleConfirmModalClose}>
                 No
               </button>
             </div>
