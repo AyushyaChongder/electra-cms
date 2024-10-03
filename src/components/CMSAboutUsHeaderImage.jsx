@@ -85,9 +85,9 @@ function CMSAboutUsHeaderImage() {
               <button className="cms-action-button banner-edit-button" onClick={() => handleEditClick(image)}>
                 <img src={Pencil} alt="Edit" className="cms-action-icon" />
               </button>
-              <button className="cms-action-button banner-delete-button" onClick={() => handleDeleteClick(image.id)}>
+              {/* <button className="cms-action-button banner-delete-button" onClick={() => handleDeleteClick(image.id)}>
                 <img src={Dustbin} alt="Delete" className="cms-action-icon" />
-              </button>
+              </button> */}
             </div>
           </div>
         ))}
