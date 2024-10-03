@@ -22,6 +22,13 @@ import CMSLogin from "./components/CMSLogin";
 import CMSEnquireEmailID from "./components/CMSEnquireEmailID";
 import CMSEnquireOfficeAddress from "./components/CMSEnquireOfficeAddress";
 import CMSEnquireContactNumber from "./components/CMSEnquireContactNumber";
+import Footer from "./footer/Footer";
+import Careers from "./careers/Careers";
+import CMSCareersJobAccordion from "./components/CMSCareersJobAccordion";
+import CMSFooterEmailAddress from "./components/CMSFooterEmailAddress";
+import CMSFooterOfficeAddress from "./components/CMSFooterOfficeAddress";
+import CMSFooterContact from "./components/CMSFooterContact";
+import CMSFooterSocialLinks from "./components/CMSFooterSocialLinks";
 
 // New ProtectedRoute component to secure routes
 const ProtectedRoute = ({ children }) => {
@@ -89,6 +96,16 @@ export default function App() {
               <Services />
             </ProtectedRoute>
           } />
+          <Route path="/footer" element={
+            <ProtectedRoute>
+              <Footer />
+            </ProtectedRoute>
+          } />
+           <Route path="/careers" element={
+            <ProtectedRoute>
+              <Careers/>
+            </ProtectedRoute>
+          } />
           <Route path="/cms-home" element={
             <ProtectedRoute>
               <CMSHome />
@@ -147,6 +164,31 @@ export default function App() {
           <Route path="/cms-enquire-contact" element={
             <ProtectedRoute>
               <CMSEnquireContactNumber/>
+            </ProtectedRoute>
+          } />
+          <Route path="/cms-footer-emailid" element={
+            <ProtectedRoute>
+              <CMSFooterEmailAddress/>
+            </ProtectedRoute>
+          } />
+          <Route path="/cms-footer-address" element={
+            <ProtectedRoute>
+              <CMSFooterOfficeAddress/>
+            </ProtectedRoute>
+          } />
+          <Route path="/cms-footer-contact" element={
+            <ProtectedRoute>
+              <CMSFooterContact/>
+            </ProtectedRoute>
+          } />
+          <Route path="/cms-footer-social" element={
+            <ProtectedRoute>
+              <CMSFooterSocialLinks/>
+            </ProtectedRoute>
+          } />
+          <Route path="/cms-careers-jobaccordion" element={
+            <ProtectedRoute>
+              <CMSCareersJobAccordion/>
             </ProtectedRoute>
           } />
           {/* Fallback route */}

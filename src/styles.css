@@ -29,6 +29,7 @@
   z-index: 1; /* Ensure sidebar is above other content but below overlay */
 }
 
+
 /* Sidebar Drawer for Mobile */
 @media (max-width: 768px) {
   .sidebar {
@@ -295,6 +296,7 @@
   border: 1px solid #ddd;
   padding: 10px;
   border-radius: 5px;
+  word-wrap: break-word; /* Break long links */
 }
 
 .cms-banner-preview {
@@ -893,4 +895,18 @@ label {
     flex: 1 0 100%;
     margin: 0 5px 10px;
   }
+}
+
+
+.cms-logout-button {
+  background-color: #1468A1;
+  width: 100%;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 500;
 }

@@ -18,6 +18,7 @@ export default function Sidebar({ onLogout }) {
     { path: '/services', name: 'Services' },
     { path: '/enquire', name: 'Enquire' },
     { path: '/footer', name: 'Footer' },
+    { path: '/careers', name: 'Careers' },
   ];
 
   const handleClick = (path) => {
@@ -65,7 +66,7 @@ export default function Sidebar({ onLogout }) {
 
         {/* Logout button at the bottom */}
         <div className="sidebar-footer">
-          <button onClick={handleLogout} className="cms-upload-button">
+          <button onClick={handleLogout} className="cms-logout-button">
             <LogOut size={20} />
             <span>Logout</span>
           </button>
