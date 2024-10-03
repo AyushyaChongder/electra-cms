@@ -71,10 +71,10 @@ function CMSLogin({ onLogin }) {
       return;
     }
 
-    const resetPasswordApiUrl = 'https://your-api-gateway-url/v1/updatePassword';
+    const resetPasswordApiUrl = 'https://h363oe6bd1.execute-api.ap-south-1.amazonaws.com/v1/updatePassword';
 
     const requestBody = {
-      user_name: username,
+      user_name: "admin",
       new_password: newPassword,
     };
 
