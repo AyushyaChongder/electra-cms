@@ -9,32 +9,32 @@ function CMSServices() {
       {
         title: "Design And Consulting",
         description: "Manage the Service",
-        editPath: "/cms-footer-emailid",
+        editPath: "/cms-services-design",
       },
       {
         title: "Installation & Commissioning",
         description: "Manage the Service",
-        editPath: "/cms-footer-address",
+        editPath: "/cms-services-install",
       },
       {
         title: "Panel Board & Control Systems",
         description: "Manage the Service",
-        editPath: "/cms-footer-contact",
+        editPath: "/cms-services-panel-board",
       },
       {
         title: "Approvals & Compliance",
         description: "Manage the Service",
-        editPath: "/cms-footer-social",
+        editPath: "/cms-services-approvals",
       },
       {
         title: "Maintainance & Repair",
         description: "Manage the Service",
-        editPath: "/cms-footer-contact",
+        editPath: "/cms-services-maintainance",
       },
       {
         title: "Value Added Services",
         description: "Manage the Service",
-        editPath: "/cms-footer-social",
+        editPath: "/cms-service-value",
       },
     ]);
   
@@ -85,12 +85,7 @@ function CMSServices() {
         {/* Header section with title and login button */}
         <div className="cms-header flex justify-between items-center p-4">
           <h1 className="cms-title">Services Dashboard</h1>
-          <button
-            className="cms-add-button"
-            onClick={() => setIsModalOpen(true)}
-          >
-            Add New Service
-          </button>
+          
         </div>
   
         {/* Content section with CMS cards */}

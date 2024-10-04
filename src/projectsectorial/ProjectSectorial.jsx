@@ -1,8 +1,11 @@
 import React from 'react'
+import CMSPortfolioProjects from '../components/CMSPortfolioProjects'
 
 function ProjectSectorial() {
   return (
-    <div>ProjectSectorial</div>
+    <>
+      <CMSPortfolioProjects/>
+    </>
   )
 }
 

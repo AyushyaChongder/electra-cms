@@ -358,9 +358,7 @@ const CMSServiceCards = () => {
                 />
               </label>
               {formData.imagePreview && (
-                
                   <img src={formData.imagePreview} alt="Preview" className="cms-bannerimg-preview" />
-              
               )}
               <label>
                 Route:
