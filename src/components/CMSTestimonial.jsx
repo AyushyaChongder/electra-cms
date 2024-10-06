@@ -239,48 +239,48 @@ const CMSTestimonial = () => {
     setIsModalOpen(true);
   };
 
-  // const handleDeleteClick = async (testimonialId) => {
-  //   // Ask for confirmation before proceeding with deletion
-  //   const confirmDelete = window.confirm(
-  //     "Are you sure you want to delete this testimonial?"
-  //   );
-  //   if (!confirmDelete) return;
+  const handleDeleteClick = async (testimonialId) => {
+    // Ask for confirmation before proceeding with deletion
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this testimonial?"
+    );
+    if (!confirmDelete) return;
 
-  //   try {
-  //     // Call the delete API
-  //     const response = await fetch(
-  //       "https://0kshs1p352.execute-api.ap-south-1.amazonaws.com/v1/deleteTestimonial",
-  //       {
-  //         method: "DELETE",
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //         },
-  //         body: JSON.stringify({
-  //           id: testimonialId, // Pass the testimonial ID for deletion
-  //         }),
-  //       }
-  //     );
+    try {
+      // Call the delete API
+      const response = await fetch(
+        "https://0kshs1p352.execute-api.ap-south-1.amazonaws.com/v1/deleteTestimonial",
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            id: testimonialId, // Pass the testimonial ID for deletion
+          }),
+        }
+      );
 
-  //     if (!response.ok) {
-  //       throw new Error(`Delete failed with status ${response.status}`);
-  //     }
+      if (!response.ok) {
+        throw new Error(`Delete failed with status ${response.status}`);
+      }
 
-  //     const data = await response.json();
-  //     if (data.status_code === 200) {
-  //       // Remove the deleted testimonial from the state
-  //       const updatedTestimonials = testimonials.filter(
-  //         (testimonial) => testimonial.id !== testimonialId
-  //       );
-  //       setTestimonials(updatedTestimonials); // Update the testimonials state
-  //       setError(null); // Clear any previous errors
-  //     } else {
-  //       throw new Error("Failed to delete testimonial");
-  //     }
-  //   } catch (error) {
-  //     console.error("Error deleting testimonial:", error);
-  //     setError("Failed to delete testimonial. Please try again.");
-  //   }
-  // };
+      const data = await response.json();
+      if (data.status_code === 200) {
+        // Remove the deleted testimonial from the state
+        const updatedTestimonials = testimonials.filter(
+          (testimonial) => testimonial.id !== testimonialId
+        );
+        setTestimonials(updatedTestimonials); // Update the testimonials state
+        setError(null); // Clear any previous errors
+      } else {
+        throw new Error("Failed to delete testimonial");
+      }
+    } catch (error) {
+      console.error("Error deleting testimonial:", error);
+      setError("Failed to delete testimonial. Please try again.");
+    }
+  };
 
   if (isLoading) {
     return <div className="loader">Loading...</div>;

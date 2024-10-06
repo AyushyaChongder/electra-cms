@@ -1,15 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import '../styles.css'; // Import your CSS file
-import Pencil from '../assets/img/pencil.png';
-import Dustbin from '../assets/img/dustbin.png';
-
-// Import images directly
-import image1 from '../assets/img/expertise_webimage.webp';
-import image2 from '../assets/img/agility_webimage.webp';
-import image3 from '../assets/img/integrity_webimage.webp';
-import image4 from '../assets/img/innovation_webimage.webp';
-import image5 from '../assets/img/clientcentric_webimage.webp';
-import image6 from '../assets/img/collaboration_webimage.webp';
+import React, { useState, useEffect } from "react";
+import "../styles.css"; // Import your CSS file
+import Pencil from "../assets/img/pencil.png";
+import Dustbin from "../assets/img/dustbin.png";
 
 const CMSAboutUsIntegrityCarousel = () => {
   const [cards, setCards] = useState([]);
@@ -18,28 +10,59 @@ const CMSAboutUsIntegrityCarousel = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
     id: null,
-    title: '',
-    description: '',
-    image: null,     // Store the image file
-    imagePreview: '', // Store the image preview URL
-    alt: '',
+    title: "",
+    description: "",
+    url: null,
+    imagePreview: "",
+    position: 0, // New field for position
   });
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
 
-  // Slides data
-  const slides = [
-    { title: 'Expertise Section', image: image1, description: 'Benefit from our team\'s extensive knowledge and skills in electrical engineering, ensuring proficient and reliable solutions.', alt: 'Skilled Electrapower Engineering technician at work, demonstrating expertise, reflecting company values.' },
-    { title: 'Agility', image: image2, description: 'Experience our quick and flexible response to your needs, adapting swiftly to changing project requirements and timelines.', alt: 'Team collaboration around a table, adapting to project needs, showcasing Electrapower Engineering’s Agility.' },
-    { title: 'Integrity', image: image3, description: 'Trust in our commitment to honesty, transparency, and ethical conduct in all aspects of our work, fostering long-term partnerships based on integrity.', alt: 'Diverse team in open discussion with clients, reflecting Electrapower Engineering’s core value of Integrity.' },
-    { title: 'Innovation', image: image4, description: 'Access cutting-edge solutions and technologies as we continuously explore new ideas and approaches to enhance efficiency and effectiveness.', alt: 'Engineer working on intricate machinery, symbolizing Electrapower Engineering’s commitment to Innovation.' },
-    { title: 'Client centric', image: image5, description: 'Enjoy personalized attention and tailored solutions that prioritize your unique requirements, ensuring your satisfaction and success.', alt: 'Electrapower Engineering team celebrating with happy clients, showcasing their Client Centric approach.' },
-    { title: 'Collaboration', image: image6, description: 'We believe in teamwork and foster a collaborative environment where everyone\'s ideas are valued.', alt: 'Electrapower Engineering team and clients collaborating closely, highlighting the company\'s core value of Collaboration.' },
-  ];
+  // Function to generate a 24-character alphanumeric ID
+  const generateRandomId = (length) => {
+    const characters =
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    let result = "";
+    for (let i = 0; i < length; i++) {
+      result += characters.charAt(
+        Math.floor(Math.random() * characters.length)
+      );
+    }
+    return result;
+  };
 
+  const fetchSlidesData = async () => {
+    try {
+      const response = await fetch(
+        "https://j00adwkd1b.execute-api.ap-south-1.amazonaws.com/v1/getAboutUsCarousel"
+      );
+      const result = await response.json();
+
+      if (result.status_code === 200) {
+        // Map the fetched data to match your existing structure
+        const formattedCards = result.data.map((item) => ({
+          id: item.id,
+          title: item.title,
+          description: item.description,
+          url: item.url,
+          position: item.position || 0, // Assuming the API returns position
+        }));
+
+        setCards(formattedCards.sort((a, b) => a.position - b.position));
+      } else {
+        setError("Failed to fetch slides data.");
+      }
+    } catch (err) {
+      setError("An error occurred while fetching data.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Fetch slides data from API
   useEffect(() => {
-    setCards(slides);
-    setIsLoading(false);
+    fetchSlidesData();
   }, []);
 
   const handleAddNewClick = () => {
@@ -51,11 +74,11 @@ const CMSAboutUsIntegrityCarousel = () => {
     setIsModalOpen(false);
     setFormData({
       id: null,
-      title: '',
-      description: '',
-      image: null,
-      imagePreview: '', // Reset the image preview
-      alt: '',
+      title: "",
+      description: "",
+      url: null,
+      imagePreview: "",
+      position: null
     });
   };
 
@@ -70,12 +93,12 @@ const CMSAboutUsIntegrityCarousel = () => {
 
   const handleFormChange = (e) => {
     const { name, value, files } = e.target;
-    if (name === 'image') {
+    if (name === "url") {
       const file = files[0];
       const previewUrl = URL.createObjectURL(file); // Create the image preview URL
       setFormData((prevState) => ({
         ...prevState,
-        image: file,      // Store the image file
+        url: file, // Store the image file
         imagePreview: previewUrl, // Store the preview URL
       }));
     } else {
@@ -87,8 +110,117 @@ const CMSAboutUsIntegrityCarousel = () => {
   };
 
   const handleFormSubmit = async () => {
-    // Logic for handling form submission goes here
-    // Similar to CMSServiceCards, handle API calls, editing, etc.
+    try {
+      let imageURL = "";
+      const positionIndex = parseInt(formData.position, 10); // Convert position to integer
+
+      if (formData.url) {
+        const reader = new FileReader();
+        reader.readAsDataURL(formData.url);
+
+        reader.onloadend = async () => {
+          const base64Image = reader.result.split(",")[1];
+
+          try {
+            const uploadImageResponse = await fetch(
+              "https://3diye7ozeb.execute-api.ap-south-1.amazonaws.com/v1/uploadAboutUsCarouselImage",
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                  file_name: formData.url.name,
+                  file_data: base64Image,
+                }),
+              }
+            );
+
+            if (!uploadImageResponse.ok) {
+              throw new Error(
+                `Image upload failed with status ${uploadImageResponse.status}`
+              );
+            }
+
+            const uploadImageData = await uploadImageResponse.json();
+            imageURL = uploadImageData.object_url;
+
+            const cardData = {
+              id: formData.id || generateRandomId(24),
+              title: formData.title,
+              description: formData.description,
+              url: imageURL || formData.imagePreview,
+              position: positionIndex,
+            };
+
+            const method = isEditing ? "PUT" : "POST"; // Use PUT for update, POST for create
+
+            const apiEndpoint = isEditing
+              ? "https://wa6kvv1c2a.execute-api.ap-south-1.amazonaws.com/v1/updateAboutUsCarousel"
+              : "https://do90bgkgc8.execute-api.ap-south-1.amazonaws.com/v1/createAboutUsCarouselCard";
+
+            await fetch(apiEndpoint, {
+              method: method,
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(cardData),
+            });
+
+            // Clear error state on success
+            setError(null);
+
+            await fetchSlidesData(); // Refresh the banners list
+            handleCloseModal(); // Close the modal
+          } catch (error) {
+            console.error("Error uploading image or slide card data:", error);
+            setError(
+              "Failed to upload image or slide card data. Please try again."
+            );
+          }
+        };
+
+        reader.onerror = () => {
+          setError("Failed to read the image file. Please try again.");
+        };
+      } else {
+        const cardData = {
+          id: formData.id || generateRandomId(24),
+          title: formData.title,
+          description: formData.description,
+          url: formData.imagePreview,
+          position: positionIndex,
+        };
+
+        try {
+          const method = isEditing ? "PUT" : "POST"; // Use PUT for update, POST for create
+
+          const apiEndpoint = isEditing
+            ? "https://wa6kvv1c2a.execute-api.ap-south-1.amazonaws.com/v1/updateAboutUsCarousel"
+            : "https://do90bgkgc8.execute-api.ap-south-1.amazonaws.com/v1/createAboutUsCarouselCard";
+
+          await fetch(apiEndpoint, {
+            method: method,
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(cardData),
+          });
+
+          // Clear error state on success
+          setError(null);
+
+          await fetchSlidesData(); // Refresh the banners list
+          handleCloseModal(); // Close the modal
+        } catch (error) {
+          console.error("Error uploading slide card data:", error);
+          setError("Failed to upload slide card data. Please try again.");
+        }
+      }
+    } catch (error) {
+      console.error("Error processing form submission:", error);
+      setError("Failed to process form submission. Please try again.");
+    }
   };
 
   const handleEditClick = (card) => {
@@ -97,16 +229,47 @@ const CMSAboutUsIntegrityCarousel = () => {
       id: card.id,
       title: card.title,
       description: card.description,
-      image: null,          // Image editing logic could be handled separately
-      imagePreview: card.image, // Display the existing image preview
-      alt: card.alt,
+      url: null,
+      imagePreview: card.url,
+      position: card.position, // Set the existing position
     });
     setIsModalOpen(true);
   };
 
   const handleDeleteClick = async (cardId) => {
-    // Logic for handling deletion
-    // Similar to CMSServiceCards, handle API calls for deletion
+     // Ask for confirmation before proceeding with deletion
+     const confirmDelete = window.confirm("Are you sure you want to delete this slide card?");
+     if (!confirmDelete) return;
+   
+     try {
+       // Call the delete API
+       const response = await fetch("https://1njnsiuhch.execute-api.ap-south-1.amazonaws.com/v1/deleteAboutUsCarousel", {
+         method: "DELETE",
+         headers: {
+           "Content-Type": "application/json",
+         },
+         body: JSON.stringify({
+           id: cardId,
+         }),
+       });
+   
+       if (!response.ok) {
+         throw new Error(`Delete failed with status ${response.status}`);
+       }
+   
+       const data = await response.json();
+       if (data.status_code === 200) {
+         // Remove the deleted banner from the state
+         const updatedSlideCards = cards.filter((card) => card.id !== cardId);
+         setCards(updatedSlideCards);
+         setError(null); // Clear any previous errors
+       } else {
+         throw new Error("Failed to delete slide card");
+       }
+     } catch (error) {
+       console.error("Error deleting slide card:", error);
+       setError("Failed to delete slide card. Please try again.");
+     }
   };
 
   if (isLoading) {
@@ -128,9 +291,15 @@ const CMSAboutUsIntegrityCarousel = () => {
 
       <div className="cms-container">
         {cards.map((card) => (
-          <div key={card.title} className="cms-box">
-            <img src={card.image} alt={card.alt} className="cms-banner-preview" />
+          <div key={card.id} className="cms-box">
+            <img
+              src={card.url}
+              alt={card.title}
+              className="cms-banner-preview"
+            />
             <div className="cms-box-content">
+              <p className="cms-box-description">{card.title}</p>
+
               <p className="cms-box-description">{card.description}</p>
               <div className="cms-box-actions">
                 <button
@@ -155,7 +324,7 @@ const CMSAboutUsIntegrityCarousel = () => {
         <div className="cms-modal-overlay">
           <div className="cms-modal-content">
             <h2 className="cms-modal-title">
-              {isEditing ? 'Edit Slide Details' : 'Add New Slide Details'}
+              {isEditing ? "Edit Slide Details" : "Add New Slide Details"}
             </h2>
             <form
               onSubmit={(e) => {
@@ -163,6 +332,17 @@ const CMSAboutUsIntegrityCarousel = () => {
                 setIsConfirmModalOpen(true);
               }}
             >
+              <label>
+                Position:
+                <input
+                  type="number"
+                  name="position"
+                  className="cms-input"
+                  min="0"
+                  value={formData.position}
+                  onChange={handleFormChange}
+                />
+              </label>
               <label>
                 Title:
                 <input
@@ -186,18 +366,22 @@ const CMSAboutUsIntegrityCarousel = () => {
                 Image:
                 <input
                   type="file"
-                  name="image"
+                  name="url"
                   accept="image/*"
                   className="cms-input"
                   onChange={handleFormChange}
                 />
               </label>
               {formData.imagePreview && (
-                <img src={formData.imagePreview} alt="Preview" className="cms-bannerimg-preview" />
+                <img
+                  src={formData.imagePreview}
+                  alt="Preview"
+                  className="cms-bannerimg-preview"
+                />
               )}
 
               <button type="submit" className="cms-upload-button">
-                {isEditing ? 'Update Slide' : 'Add Slide'}
+                {isEditing ? "Update Slide" : "Add Slide"}
               </button>
               <button className="cms-close-button" onClick={handleCloseModal}>
                 Cancel
@@ -213,10 +397,16 @@ const CMSAboutUsIntegrityCarousel = () => {
             <h2>Confirm Submission</h2>
             <p>Are you sure you want to submit the changes?</p>
             <div className="cms-button-container">
-              <button className="cms-yes-button" onClick={handleConfirmModalSubmit}>
+              <button
+                className="cms-yes-button"
+                onClick={handleConfirmModalSubmit}
+              >
                 Yes
               </button>
-              <button className="cms-no-button" onClick={handleConfirmModalClose}>
+              <button
+                className="cms-no-button"
+                onClick={handleConfirmModalClose}
+              >
                 No
               </button>
             </div>

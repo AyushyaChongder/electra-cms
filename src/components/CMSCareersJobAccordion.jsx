@@ -1,106 +1,14 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import "../styles.css"; // Import your CSS file
 import Pencil from "../assets/img/pencil.png";
 import Dustbin from "../assets/img/dustbin.png";
 
-const jobDetails = [
-  {
-    title: "Accountant Assistant",
-    location: "Ernakulam, Kerala",
-    experience: "1+ Year",
-    job_status: "Open",
-    description:
-      "We are seeking a motivated and detail-oriented Accountant Assistant to join our team. You will play a crucial role in supporting the financial operations of our electrical contracting firm. This position involves various accounting, administrative, and customer service tasks.",
-    responsibilities: [
-      "Accounting: Accurately record financial transactions, Process invoices and payments, Assist in preparing financial statements",
-      "Administrative Support: Manage office tasks such as filing, printing, and emailing, Organize and maintain financial records",
-      "Customer Service: Communicate with clients and vendors regarding payments and invoices, Address any billing inquiries",
-      "Payroll: Assist with payroll processing, Verify timesheets and calculate vacation/sick time",
-      "Financial Reporting: Help create and update financial reports (balance sheets, cash flow statements, etc.)",
-      "Reconciliation: Reconcile financial accounts, including accounts receivable and payable",
-      "Budgeting: Evaluate financial budgets and track expenses",
-      "Compliance: Ensure compliance with company policies and procedures",
-    ],
-    skillsets: [
-      "Strong understanding of accounting principles and practices",
-      "Proficiency in Microsoft Office Suite (especially Excel)",
-      "Excellent attention to detail and accuracy",
-      "Effective communication and interpersonal skills",
-      "Ability to work independently and as part of a team",
-    ],
-    requirements: [
-      "Bachelor's degree in Commerce (B.Com) or higher.",
-      "1+ year of experience in an electrical contracting firm or a related field",
-    ],
-    education: "Bachelor's degree in Commerce (B.Com) or higher",
-    benefits:
-      "Competitive salary. Opportunities for professional growth and development. Work in a dynamic and innovative environment.",
-  },
-  {
-    title: "Electrical Site Engineer",
-    location: "Kerala",
-    experience: "2+ Years",
-    job_status: "Open",
-    description:
-      "Electrapower Engineering, a leading A-Grade HT electrical contracting firm, is seeking a highly motivated and experienced Electrical Site Engineer to join our team.",
-    responsibilities: [
-      "Oversee and coordinate all on-site electrical activities.",
-      "Manage project timelines, budgets, and resources.",
-      "Review and interpret electrical drawings, specifications, and schematics.",
-      "Conduct regular inspections and quality checks.",
-      "Supervise and guide a team of electricians and technicians.",
-      "Maintain effective communication with clients.",
-      "Implement and enforce safety protocols.",
-      "Prepare and submit regular progress reports.",
-    ],
-    skillsets: [
-      "Strong knowledge of electrical system design.",
-      "Project management and site coordination skills.",
-      "Ability to read electrical schematics and plans.",
-      "Excellent communication and leadership skills.",
-    ],
-    requirements: [
-      "B.Tech/Diploma in Electrical and Electronics Engineering (EEE).",
-      "Minimum 2 years of experience in electrical projects, preferably with an A-Grade Electrical Contractor.",
-    ],
-    education: "B.Tech/Diploma in Electrical and Electronics Engineering",
-    benefits:
-      "Competitive salary. Opportunities for professional development and advancement.",
-  },
-  {
-    title: "Electrician",
-    location: "Kerala",
-    experience: "1-2 Years",
-    job_status: "Open",
-    description:
-      "Electrapower Engineering is seeking skilled Electricians to join our team. The ideal candidate will have a strong technical background in electrical installations, maintenance, and repair.",
-    responsibilities: [
-      "Install, maintain, and repair electrical systems.",
-      "Perform routine electrical maintenance tasks.",
-      "Inspect transformers, circuit breakers, and electrical components.",
-      "Troubleshoot and resolve electrical malfunctions.",
-      "Adhere to safety protocols and regulations.",
-      "Collaborate effectively with team members to complete projects.",
-    ],
-    skillsets: [
-      "Proficient in electrical installations and repairs.",
-      "Ability to read and interpret electrical drawings.",
-      "Strong troubleshooting and problem-solving skills.",
-      "Good communication and teamwork abilities.",
-    ],
-    requirements: [
-      "ITI Electrical (Wireman, Electrician) or Diploma in Electrical Engineering.",
-      "1 to 2 years of experience in electrical work, preferably with an A-Grade Electrical Contractor.",
-    ],
-    education: "ITI Electrical/Diploma in Electrical Engineering",
-    benefits:
-      "Attractive salary. Opportunities for training and skill development.",
-  },
-];
-
 function CMSCareersJobAccordion() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [jobDetails, setJobDetails] = useState([]);
   const [formData, setFormData] = useState({
     title: "",
     location: "",
@@ -114,17 +22,86 @@ function CMSCareersJobAccordion() {
     benefits: "",
   });
 
+  // Function to generate a 24-character alphanumeric ID
+  const generateRandomId = (length) => {
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let result = '';
+    for (let i = 0; i < length; i++) {
+      result += characters.charAt(Math.floor(Math.random() * characters.length));
+    }
+    return result;
+  };
+
+
+  const fetchJobs = async () => {
+    try {
+      const response = await fetch("https://o6ahie1f44.execute-api.ap-south-1.amazonaws.com/v1/getJobs");
+      const data = await response.json();
+      if (data.status_code === 200) {
+        setJobDetails(data.data);
+        setIsLoading(false);
+      } else {
+        console.error("Failed to fetch jobs:", data);
+      }
+    } catch (error) {
+      console.error("Error fetching jobs:", error);
+    }
+  };
+
+
+  // Fetch job data from API
+  useEffect(() => {
+    fetchJobs();
+  }, []);
+
+ 
   const handleEditClick = (job) => {
-    setFormData(job);
-    setIsEditing(true);
-    setIsModalOpen(true);
-  };
+    setFormData({
+        ...job, // Include entire job object
+        job_id: job.job_id, // Ensure job_id is set for editing
+        skillsets: job.skillsets.join('\n'), // Convert array to string for display
+        responsibilities: job.responsibilities.join('\n'), // Ensure this is also handled
+        requirements: job.requirements.join('\n'), // Ensure this is also handled
+    });
+    setIsEditing(true)
+    setIsModalOpen(true)
+  }
 
-  const handleDeleteClick = (title) => {
-    // Implement delete functionality
-    console.log("Deleted job:", title);
-  };
+  const handleDeleteClick = async (jobId) => {
+    // Ask for confirmation before proceeding with deletion
+    const confirmDelete = window.confirm("Are you sure you want to delete this job?");
+    if (!confirmDelete) return;
 
+    try {
+        // Call the delete API
+        const response = await fetch("https://b2ycde9t04.execute-api.ap-south-1.amazonaws.com/v1/deleteJobs", {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                job_id: jobId,
+            }),
+        });
+
+        if (!response.ok) {
+            throw new Error(`Delete failed with status ${response.status}`);
+        }
+
+        const data = await response.json();
+        if (data.status_code === 200) {
+            // Remove the deleted job from the state
+            const updatedJobs = jobDetails.filter((job) => job.job_id !== jobId);
+            setJobDetails(updatedJobs); // Update state with the remaining jobs
+            setError(null); // Clear any previous errors
+        } else {
+            throw new Error("Failed to delete job");
+        }
+    } catch (error) {
+        console.error("Error deleting job:", error);
+        setError("Failed to delete job. Please try again.");
+    }
+};
   const handleFormChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -132,6 +109,7 @@ function CMSCareersJobAccordion() {
   const handleCloseModal = () => {
     setIsModalOpen(false);
     setIsEditing(false);
+    // Reset formData to empty values
     setFormData({
       title: "",
       location: "",
@@ -146,12 +124,64 @@ function CMSCareersJobAccordion() {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Implement submit functionality
-    console.log("Form Submitted:", formData);
-    handleCloseModal();
+  
+    // Prepare the request body
+    const requestBody = {
+      title: formData.title,
+      location: formData.location,
+      experience: formData.experience,
+      job_status: formData.job_status || "Open",
+      description: formData.description,
+      responsibilities: formData.responsibilities.split('\n'), // Split by new line
+      skillsets: formData.skillsets.split('\n'), // Split by new line
+      requirements: formData.requirements.split('\n'), // Split by new line
+      education: formData.education,
+      benefits: formData.benefits,
+      job_id: formData.job_id || generateRandomId(24), // Use the existing job_id
+    };
+  
+    try {
+      const url = isEditing 
+        ? "https://aplwtllhb0.execute-api.ap-south-1.amazonaws.com/v1/updateJobs" 
+        : "https://zh01ucp1s7.execute-api.ap-south-1.amazonaws.com/v1/createJobs";
+      
+      const method = isEditing ? "PUT" : "POST"; // Use PUT for update and POST for create
+  
+      const response = await fetch(url, {
+        method: method,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestBody),
+      });
+  
+      const data = await response.json();
+  
+      if (response.ok) {
+        console.log(isEditing ? "Job updated successfully:" : "Job created successfully:", data);
+        fetchJobs(); // Refresh the job list
+        handleCloseModal(); // Close modal after successful submission
+      } else {
+        console.error(isEditing ? "Failed to update job:" : "Failed to create job:", data);
+        setError(isEditing ? "Failed to update job. Please try again." : "Failed to create job. Please try again.");
+      }
+    } catch (error) {
+      console.error(isEditing ? "Error updating job:" : "Error creating job:", error);
+      setError("An error occurred while processing the job. Please try again.");
+    }
   };
+
+  
+
+  if (isLoading) {
+    return <div className="loader">Loading...</div>;
+  }
+
+  if (error) {
+    return <div className="error">{error}</div>;
+  }
 
   return (
     <div className="cms-banner-container">
@@ -205,7 +235,7 @@ function CMSCareersJobAccordion() {
                 </button>
                 <button
                   className="cms-action-button banner-delete-button"
-                  onClick={() => handleDeleteClick(job.title)}
+                  onClick={() => handleDeleteClick(job.job_id)}
                 >
                   <img src={Dustbin} alt="Delete" className="cms-action-icon" />
                 </button>

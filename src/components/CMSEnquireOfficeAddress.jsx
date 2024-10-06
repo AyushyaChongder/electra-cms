@@ -1,18 +1,34 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import "../styles.css";
 import Pencil from "../assets/img/pencil.png";
 import Dustbin from "../assets/img/dustbin.png";
 
 function CMSEnquireOfficeAddress() {
-  const officeAddresses = [
-    { id: 1, address: "Electra Power Engineering, 'A' Grade Electrical Engineers & Contractors, 33/1305-A1, Chalikavattom, Vennala P.O, Kochi, Kerala, INDIA - 682028" },
-    // Add more addresses here if needed
-  ];
-
-  const [addresses, setAddresses] = useState(officeAddresses);
+  const [addresses, setAddresses] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({ id: '', address: '' });
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  const fetchAddresses = async () => {
+    try {
+      const response = await fetch('https://as783pagq9.execute-api.ap-south-1.amazonaws.com/v1/getAddress');
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const { data } = await response.json();
+      setAddresses(data);
+      setIsLoading(false);
+    } catch (error) {
+      console.error('Error fetching addresses:', error);
+      setError('Failed to fetch addresses. Please try again.');
+    }
+  };
+
+  useEffect(() => {
+    fetchAddresses();
+  }, []);
 
   const handleEditClick = (address) => {
     setFormData(address);
@@ -20,8 +36,36 @@ function CMSEnquireOfficeAddress() {
     setIsModalOpen(true);
   };
 
-  const handleDeleteClick = (id) => {
-    setAddresses(addresses.filter((address) => address.id !== id));
+  const handleDeleteClick = async (addressId) => {
+    const confirmDelete = window.confirm("Are you sure you want to delete this address?");
+    if (!confirmDelete) return;
+
+    try {
+      const response = await fetch("https://twvj8cb4y0.execute-api.ap-south-1.amazonaws.com/v1/deleteAddress", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          id: addressId,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Delete failed with status ${response.status}`);
+      }
+
+      const data = await response.json();
+      if (data.status_code === 200) {
+        const updatedAddresses = addresses.filter((address) => address.id !== addressId);
+        setAddresses(updatedAddresses);
+      } else {
+        throw new Error("Failed to delete address");
+      }
+    } catch (error) {
+      console.error("Error deleting address:", error);
+      setError("Failed to delete address. Please try again.");
+    }
   };
 
   const handleFormChange = (e) => {
@@ -34,15 +78,65 @@ function CMSEnquireOfficeAddress() {
     setFormData({ id: '', address: '' });
   };
 
-  const handleSubmit = (e) => {
+  const generateUniqueId = () => {
+    return `id${Math.floor(Math.random() * 10000)}`;
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (isEditing) {
-      setAddresses(addresses.map((addr) => (addr.id === formData.id ? formData : addr)));
+      try {
+        const response = await fetch('https://15fjno2lo7.execute-api.ap-south-1.amazonaws.com/v1/updateAddress', {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            id: formData.id,
+            address: formData.address,
+          }),
+        });
+        if (!response.ok) {
+          throw new Error('Failed to update address');
+        }
+        setAddresses(addresses.map(addr => (addr.id === formData.id ? formData : addr)));
+      } catch (error) {
+        console.error('Error updating address:', error);
+        setError('Failed to update address. Please try again.');
+      }
     } else {
-      setAddresses([...addresses, { ...formData, id: addresses.length + 1 }]);
+      const newAddressId = generateUniqueId(); // Generate a unique ID for the new address
+      try {
+        const response = await fetch("https://jjdwml0jfi.execute-api.ap-south-1.amazonaws.com/v1/createAdress", {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            id: newAddressId,
+            address: formData.address,
+          }),
+        });
+        if (!response.ok) {
+          throw new Error('Failed to create address');
+        }
+        setAddresses([...addresses, { id: newAddressId, address: formData.address }]);
+      } catch (error) {
+        console.error('Error creating address:', error);
+        setError('Failed to create address. Please try again.');
+      }
     }
     handleCloseModal();
   };
+
+  if (isLoading) {
+    return <div className="loader">Loading...</div>;
+  }
+
+  if (error) {
+    return <div className="error">{error}</div>;
+  }
+
 
   return (
     <div className="cms-banner-container">

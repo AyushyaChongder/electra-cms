@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import "../styles.css";
 import Pencil from "../assets/img/pencil.png";
 import Dustbin from "../assets/img/dustbin.png";
@@ -6,16 +6,36 @@ import Dustbin from "../assets/img/dustbin.png";
 
 function CMSFooterContact() {
 
-  const initialContactNumbers = [
-    { id: 1, number: "+91 98470 58222" },
-    { id: 2, number: "+91 90203 58222" },
-    // Add more numbers if needed
-  ];
-
-  const [contactNumbers, setContactNumbers] = useState(initialContactNumbers);
+  const [contactNumbers, setContactNumbers] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({ id: '', number: '' });
+
+  const fetchContactNumbers = async () => {
+    try {
+      const response = await fetch('https://7rj41dy3tc.execute-api.ap-south-1.amazonaws.com/v1/getContactNumber');
+      const result = await response.json();
+      if (result.status_code === 200) {
+        const formattedData = result.data.map(item => ({
+          id: item.id,
+          number: item.Contact,
+        }));
+        setContactNumbers(formattedData);
+        setIsLoading(false);
+      }
+    } catch (error) {
+      console.error('Error fetching contact numbers:', error);
+      setError('Failed to fetch contact numbers');
+      setIsLoading(false);
+    }
+  };
+
+  // Fetch contact numbers from API
+  useEffect(() => {
+    fetchContactNumbers();
+  }, []);
 
   const handleEditClick = (contact) => {
     setFormData(contact);
@@ -23,8 +43,37 @@ function CMSFooterContact() {
     setIsModalOpen(true);
   };
 
-  const handleDeleteClick = (id) => {
-    setContactNumbers(contactNumbers.filter((contact) => contact.id !== id));
+  const handleDeleteClick = async (id) => {
+    const confirmDelete = window.confirm("Are you sure you want to delete this contact number?");
+    if (!confirmDelete) return;
+
+    try {
+      const response = await fetch("https://15izjgego8.execute-api.ap-south-1.amazonaws.com/v1/deleteContact", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          id: id,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Delete failed with status ${response.status}`);
+      }
+
+      const data = await response.json();
+      if (data.status_code === 200) {
+        // Remove the deleted contact from the state
+        const updatedContacts = contactNumbers.filter((contact) => contact.id !== id);
+        setContactNumbers(updatedContacts);
+      } else {
+        throw new Error("Failed to delete contact number");
+      }
+    } catch (error) {
+      console.error("Error deleting contact number:", error);
+      setError("Failed to delete contact number. Please try again.");
+    }
   };
 
   const handleFormChange = (e) => {
@@ -37,15 +86,68 @@ function CMSFooterContact() {
     setFormData({ id: '', number: '' });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (isEditing) {
-      setContactNumbers(contactNumbers.map((contact) => (contact.id === formData.id ? formData : contact)));
+      // Update the contact number via API
+      try {
+        const response = await fetch('https://ticb5vgtx2.execute-api.ap-south-1.amazonaws.com/v1/updateContact', {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            id: formData.id,
+            Contact: formData.number,
+          }),
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to update contact number');
+        }
+
+        // Update the contact number in local state
+        setContactNumbers(contactNumbers.map(contact => (contact.id === formData.id ? formData : contact)));
+      } catch (error) {
+        console.error('Error updating contact number:', error);
+        setError('Failed to update contact number. Please try again.');
+      }
     } else {
-      setContactNumbers([...contactNumbers, { ...formData, id: contactNumbers.length + 1 }]);
+      // Create a new contact number via API
+      const newContactId = `id${contactNumbers.length + 1}`; // Generate a unique ID for the new contact
+      try {
+        const response = await fetch('https://ywdp4x0ff4.execute-api.ap-south-1.amazonaws.com/v1/createContactNumber', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            id: newContactId,
+            Contact: formData.number,
+          }),
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to create contact number');
+        }
+
+        // Add the new contact to the local state
+        setContactNumbers([...contactNumbers, { id: newContactId, number: formData.number }]);
+      } catch (error) {
+        console.error('Error creating contact number:', error);
+        setError('Failed to create contact number. Please try again.');
+      }
     }
     handleCloseModal();
   };
+
+  if (isLoading) {
+    return <div className="loader">Loading...</div>;
+  }
+
+  if (error) {
+    return <div className="error">{error}</div>;
+  }
 
 
   return (
