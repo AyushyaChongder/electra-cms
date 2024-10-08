@@ -1,8 +1,11 @@
 import React from 'react'
+import CMSAllProjects from '../components/CMSAllProjects'
 
 function AllProjects() {
   return (
-    <div>AllProjects</div>
+    <>
+    <CMSAllProjects/>
+    </>
   )
 }
 

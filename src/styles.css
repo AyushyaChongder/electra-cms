@@ -929,6 +929,24 @@ label {
   
 }
 
+.project-container{
+  display: flex; /* Enable flexbox */
+  flex-wrap: wrap; /* Allow cards to wrap to the next line */
+  justify-content: space-between; /* Space out the cards */
+  gap: 20px; /* Optional: space between the cards */
+}
+
+.project-card {
+  background-color: #f9f9f9; /* Example background */
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  padding: 20px;
+  width: auto;
+  margin-bottom: 25px;
+  
+}
+
 .portfolio-title {
   font-size: 1.5rem;
   margin-bottom: 20px;
@@ -964,4 +982,70 @@ label {
 
 .testimonial-info {
   font-style: italic;
+}
+
+
+/*All Projects Styling*/
+.cms-projects-container {
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.cms-project-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.cms-project-card {
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  width: calc(30% - 20px);
+  padding: 15px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.cms-project-title {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: #444;
+}
+
+.cms-image-card {
+  margin-bottom: 15px;
+}
+
+.cms-image-preview {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  margin-bottom: 5px;
+}
+
+.cms-image-description {
+  font-size: 14px;
+  color: #555;
+  margin-bottom: 5px;
+}
+
+
+.cms-project-title {
+  font-size: 18px;
+  font-family: 'Montserrat', sans-serif;
+  margin-bottom: 10px;
+}
+
+.cms-add-image-button {
+  background-color: #1468A1;
+  color: white;
+  padding: 12px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  font-family: 'Montserrat', sans-serif;
+  margin-bottom: 10px;
+  width: 100%; /* Button takes full width */
 }

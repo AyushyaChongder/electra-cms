@@ -36,6 +36,7 @@ import CMSServicesApprovals from "./components/CMSServicesApprovals";
 import CMSServicesPanelBoard from "./components/CMSServicesPanelBoard";
 import CMSServicesValue from "./components/CMSServicesValue";
 import CMSPortfolioAllProjects from "./components/CMSPortfolioAllProjects";
+import CMSAllProjectsIncheon from "./components/CMSAllProjectsIncheon";
 
 // New ProtectedRoute component to secure routes
 const ProtectedRoute = ({ children }) => {
@@ -333,6 +334,18 @@ export default function App() {
               </ProtectedRoute>
             }
           />
+
+          <Route
+            path="/cms-allprojects-incheon"
+            element={
+              <ProtectedRoute>
+                <CMSAllProjectsIncheon />
+              </ProtectedRoute>
+            }
+          />
+          
+         
+
           {/* Fallback route */}
           <Route path="*" element={<Navigate to="/login" replace />} />
         </Routes>
