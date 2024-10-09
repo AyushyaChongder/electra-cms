@@ -1,59 +1,74 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import "../styles.css"; // Import your CSS file
 import Pencil from "../assets/img/pencil.png";
 import Dustbin from "../assets/img/dustbin.png";
 
-import kiaShowroom from '../assets/img/kia1_webimage.webp';
-import hardwareTrading from '../assets/img/hhys_webimage1.webp';
-import luxuryLiving from '../assets/img/apartment_webimage2.webp';
-import healthcareCenter from '../assets/img/hos1.png';
-import transformingMobility from '../assets/img/ip5_webimage.webp';
-import spicingProduction from "../assets/img/ip3_webimage.webp";
-import preservingHeritage from "../assets/img/apartment_webimage2.webp";
-import evTata from "../assets/img/tata1_webimage.webp";
-
-const cards = [
-  { id: 1, image: kiaShowroom, description: "Kerala's largest Kia showroom and workshop by Incheon Motors, featuring India's largest EV charging station." },
-  { id: 2, image: hardwareTrading, description: "Revolutionising hardware trading with scalable electrical solutions for HHYS Inframart." },
-  { id: 3, image: luxuryLiving, description: "Luxury living redefined through reliable electrical innovations with RDS Legacy Apartments." },
-  { id: 4, image: healthcareCenter, description: "Empowering healthcare with cutting-edge electrical infrastructure for Kerala's First Nuclear Medicine Center." },
-  { id: 5, image: transformingMobility, description: "Transforming mat manufacturing with advanced electrical upgrades for Travancore Cocotuft." },
-  { id: 6, image: spicingProduction, description: "Spicing up production with enhanced electrical infrastructure for Eastern Condiments." },
-  { id: 7, image: preservingHeritage, description: "Preserving heritage with electrifying solutions at Chungath Group's luxury resort, Napier Heritage." },
-  { id: 8, image: evTata, description: "Driving Kerala forward with TATA Motors' first exclusive EV showroom with Luxon Motors Pvt Ltd." },
-];
-
 const CMSPortfolioSection = () => {
-  const [cardsData, setCardsData] = useState(cards);
+  const [cardsData, setCardsData] = useState([]);
   const [isEditing, setIsEditing] = useState(null);
-  const [formData, setFormData] = useState({ image: '', description: '', route: '' });
+  const [formData, setFormData] = useState({
+    image: "",
+    description: "",
+    route: "",
+  });
   const [showModal, setShowModal] = useState(false);
 
+  // Fetch portfolio projects from the API
+  const fetchAllPortfolioProjects = async () => {
+    try {
+      const response = await axios.get(
+        "https://syyfm3xz1k.execute-api.ap-south-1.amazonaws.com/v1/getPortfolioProject"
+      );
+      if (response.data.status_code === 200) {
+        const sortedProjects = response.data.data.sort(
+          (a, b) => a.project_position - b.project_position
+        );
+        setCardsData(sortedProjects);
+      } else {
+        console.error("Failed to fetch projects:", response.data);
+      }
+    } catch (error) {
+      console.error("Error fetching projects:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchAllPortfolioProjects();
+  }, []);
+
   const handleEdit = (id) => {
-    const card = cardsData.find((card) => card.id === id);
+    const card = cardsData.find((card) => card.project_id === id);
     if (card) {
-      setFormData({ image: card.image, description: card.description, route: card.route || '' });
+      setFormData({
+        image: card.images[0]?.url || "",
+        description: card.description_one,
+        route: card.project_id,
+      });
       setIsEditing(id);
       setShowModal(true);
     }
   };
 
   const handleDelete = (id) => {
-    setCardsData(cardsData.filter((card) => card.id !== id));
+    setCardsData(cardsData.filter((card) => card.project_id !== id));
   };
 
   const handleSave = () => {
     if (isEditing) {
-      setCardsData(cardsData.map((card) =>
-        card.id === isEditing
-          ? { ...card, ...formData }
-          : card
-      ));
+      setCardsData(
+        cardsData.map((card) =>
+          card.project_id === isEditing ? { ...card, ...formData } : card
+        )
+      );
     } else {
-      const newId = cardsData.length > 0 ? Math.max(...cardsData.map(c => c.id)) + 1 : 1;
-      setCardsData([...cardsData, { ...formData, id: newId }]);
+      const newId =
+        cardsData.length > 0
+          ? Math.max(...cardsData.map((c) => c.project_id)) + 1
+          : 1;
+      setCardsData([...cardsData, { ...formData, project_id: newId }]);
     }
-    setFormData({ image: '', description: '', route: '' });
+    setFormData({ image: "", description: "", route: "" });
     setIsEditing(null);
     setShowModal(false);
   };
@@ -80,35 +95,50 @@ const CMSPortfolioSection = () => {
     <div className="cms-home">
       <div className="cms-banner-header">
         <h1 className="cms-banner-title">CMS Portfolio Section</h1>
-        <button className="cms-add-button " onClick={() => { setFormData({ image: '', description: '', route: '' }); setIsEditing(null); setShowModal(true); }}>
+        <button
+          className="cms-add-button "
+          onClick={() => {
+            setFormData({ image: "", description: "", route: "" });
+            setIsEditing(null);
+            setShowModal(true);
+          }}
+        >
           Add Card
         </button>
       </div>
       <div className="cms-container">
         {cardsData.map((card) => (
-          <div key={card.id} className="cms-box">
-            <img src={card.image} alt={card.description} className="cms-banner-preview" />
+          <div key={card.project_id} className="cms-box">
+            <img
+              src={card.images[1]?.url || card.images[0]?.url}
+              alt={card.title}
+              className="cms-banner-preview"
+            />
             <div className="cms-box-content">
-              <p className="cms-box-description">{card.description}</p>
+              <h3 className="cms-banner-alt">{card.title}</h3>
               <div className="cms-box-actions">
-                <button className="cms-action-button banner-edit-button" onClick={() => handleEdit(card.id)}>
+                <button
+                  className="cms-action-button banner-edit-button"
+                  onClick={() => handleEdit(card.project_id)}
+                >
                   <img src={Pencil} alt="Edit" className="cms-action-icon" />
                 </button>
-                <button className="cms-action-button banner-delete-button" onClick={() => handleDelete(card.id)}>
+                <button
+                  className="cms-action-button banner-delete-button"
+                  onClick={() => handleDelete(card.project_id)}
+                >
                   <img src={Dustbin} alt="Delete" className="cms-action-icon" />
                 </button>
               </div>
             </div>
           </div>
         ))}
-       
       </div>
       {showModal && (
         <div className="cms-modal-overlay">
           <div className="cms-modal-content">
-            <h2>{isEditing ? 'Edit Card Details' : 'Add New Card'}</h2>
+            <h2>{isEditing ? "Edit Card Details" : "Add New Card"}</h2>
             {isEditing && <p className="cms-modal-id">ID: {isEditing}</p>}
-            
             <label className="cms-label">Image</label>
             <input
               className="cms-input"
@@ -117,7 +147,13 @@ const CMSPortfolioSection = () => {
               accept="image/*"
               onChange={handleImageChange}
             />
-            {formData.image && <img src={formData.image} alt="Preview" className="cms-image-preview-form" />}
+            {formData.image && (
+              <img
+                src={formData.image}
+                alt="Preview"
+                className="cms-image-preview-form"
+              />
+            )}
             <label className="cms-label">Description</label>
             <input
               className="cms-input"
@@ -137,9 +173,12 @@ const CMSPortfolioSection = () => {
               onChange={handleChange}
             />
             <button className="cms-upload-button" onClick={handleSave}>
-              {isEditing ? 'Update Card' : 'Add Card'}
+              {isEditing ? "Update Card" : "Add Card"}
             </button>
-            <button className="cms-close-button" onClick={() => setShowModal(false)}>
+            <button
+              className="cms-close-button"
+              onClick={() => setShowModal(false)}
+            >
               Close
             </button>
           </div>
