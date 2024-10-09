@@ -1,131 +1,79 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import "../styles.css";
-
 import Pencil from "../assets/img/pencil.png";
 import Dustbin from "../assets/img/dustbin.png";
 
-import kia1 from "../assets/img/kia/kia1.webp";
-import kia2 from "../assets/img/kia/kia2.webp";
-import kia3 from "../assets/img/kia/kia3.webp";
-
-import hhys1 from "../assets/img/hhys/hhys1.webp";
-import hhys2 from "../assets/img/hhys/hhys2.webp";
-import hhys3 from "../assets/img/hhys/hhys3.webp";
-import hhys4 from "../assets/img/hhys/hhys4.webp";
-
-import app1 from "../assets/img/appartment/app1.webp";
-import app2 from "../assets/img/appartment/app2.webp";
-import app3 from "../assets/img/appartment/app3.webp";
-
-import hos1 from "../assets/img/hospital/hos1.webp";
-import hos2 from "../assets/img/hospital/hos2.webp";
-import hos3 from "../assets/img/hospital/hos3.webp";
-
-import coco1 from "../assets/img/cocotuft/coco1.webp";
-import coco2 from "../assets/img/cocotuft/coco2.webp";
-import coco3 from "../assets/img/cocotuft/coco3.webp";
-
-import ec1 from "../assets/img/condiments/ec1.webp";
-import ec2 from "../assets/img/condiments/ec2.webp";
-import ec3 from "../assets/img/condiments/ec3.webp";
-
-import napier1 from "../assets/img/east_napier/napier1.webp";
-import napier2 from "../assets/img/east_napier/napier2.webp";
-import napier3 from "../assets/img/east_napier/napier3.webp";
-
-import tata1 from "../assets/img/tata/tata1.webp";
-
-import kiaLogo from "../assets/img/logo/kia_logo.svg";
-import hhysLogo from "../assets/img/logo/hhys_logo.svg";
-import appLogo from "../assets/img/logo/app_logo.svg";
-import hosLogo from "../assets/img/logo/hos_logo.svg";
-import cocoLogo from "../assets/img/logo/coco_logo.svg";
-import ecLogo from "../assets/img/logo/ec_logo.svg";
-import napierLogo from "../assets/img/logo/napier_logo.svg";
-import tataLogo from "../assets/img/logo/tata_logo.svg";
-
-const data = [
-  {
-    title:
-      "Kerala's largest Kia showroom and workshop by Incheon Motors, featuring India's largest EV charging station",
-    images: [
-      {
-        url: kia1,
-        alt: "India's largest EV charging station by Kia, powered by Electrapower Engineering, promoting sustainable mobility in Nettoor, Kerala",
-      },
-      {
-        url: kia2,
-        alt: "Bright, modern Kia showroom  interior at Nettoor with cars on display, showcasing Electrapower Engineering's electrical work",
-      },
-      {
-        url: kia3,
-        alt: "Exterior view of a modern Kia car dealership with prominent signage at Nettoor, Kerala, highlighting Electrapower Engineering's electrical project contribution.",
-      },
-    ],
-    description_one:
-      "Electra Power Engineering partnered with Incheon Motors Pvt. Ltd., the largest Kia dealer in Kerala, to electrify the future of automotive retail. We spearheaded the comprehensive electrical design and installation for their flagship showroom and workshop in Nettoor, Kerala, a facility that proudly houses India's largest EV charging station by Incheon Kia.",
-
-    description_two:
-      "This project exemplifies our commitment to sustainable infrastructure and cutting-edge technology. Our team not only ensured the showroom and workshop's seamless operation with robust power systems but also played a crucial role in promoting the adoption of electric vehicles through the installation of state-of-the-art charging infrastructure.",
-
-    highlights: [
-      {
-        heading: "High-Capacity Power Infrastructure",
-        info: "Successfully installed and integrated  a 400 kVA transformer and a 250 kVA transformer, along with a 250 kVA DG set, to provide ample power for the showroom, workshop, and EV charging station.",
-      },
-      {
-        heading: "India's Largest Kia EV Charging Station",
-        info: "Installed and commissioned a 240 kW EV charging station, the largest of its kind in India, to cater to the growing demand for electric vehicles.",
-      },
-      {
-        heading: "Sustainable Energy Integration",
-        info: "Installed a 115.2 kWp solar power system, contributing to the facility's energy efficiency and reducing its carbon footprint.",
-      },
-      {
-        heading: "Rapid Charging Infrastructure Deployment",
-        info: "Demonstrated exceptional project management and execution capabilities by completing the fast-charging station approval, installation, and commissioning within a mere 30 days.",
-      },
-      {
-        heading: "Exceptional Project Delivery",
-        info: "Successfully completed the entire project, from initial approvals to final commissioning, in just 90 days, showcasing our agility and commitment to exceeding client expectations.",
-      },
-    ],
-    testimonial_logo: kiaLogo,
-    testimonial_logo_alt: "Kia Motors Logo",
-    testimonial_head: "Mr. Reji, VP Operations, Incheon Motors Pvt. Ltd",
-    testimonial_info:
-      "Electra Power Engineering's team surpassed our expectations in every aspect of this project. Their technical expertise, dedication to quality, and ability to deliver within challenging timelines were truly remarkable. The EV charging station they installed has become a major attraction for our customers, and we are confident that it will play a significant role in driving EV adoption in Kerala.",
-  },
-
-];
-
 function CMSPortfolioAllProjects() {
-  const [projects, setProjects] = useState(data); // Ensure projects is initialized
+  const [projects, setProjects] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-  const [currentProjectIndex, setCurrentProjectIndex] = useState(null);
   const [newProjectData, setNewProjectData] = useState({
+    id: null,
     title: "",
     images: [],
     imagePreviews: [],
     description_one: "",
+    description_two: "", // Adding description_two to the project data
+    highlights: [], // Adding highlights field for new project
     testimonial_head: "",
     testimonial_info: "",
     testimonial_logo: "",
     testimonial_logo_alt: "",
+    project_position: null,
   });
 
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
-  const [projectToDeleteIndex, setProjectToDeleteIndex] = useState(null);
+  
+
+  // Function to generate a random 24-character alphanumeric ID
+  const generateRandomId = (length) => {
+    const characters =
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    let result = "";
+    for (let i = 0; i < length; i++) {
+      result += characters.charAt(
+        Math.floor(Math.random() * characters.length)
+      );
+    }
+    return result;
+  };
+
+  // Fetch portfolio projects from the API
+  const fetchAllPortfolioProjects = async () => {
+    try {
+      const response = await axios.get(
+        "https://syyfm3xz1k.execute-api.ap-south-1.amazonaws.com/v1/getPortfolioProject"
+      );
+      if (response.data.status_code === 200) {
+        const sortedProjects = response.data.data.sort(
+          (a, b) => a.project_position - b.project_position
+        );
+        setProjects(sortedProjects);
+      } else {
+        console.error("Failed to fetch projects:", response.data);
+      }
+    } catch (error) {
+      console.error("Error fetching projects:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchAllPortfolioProjects();
+  }, []);
 
   const handleEditClick = (project) => {
     setIsEditing(true);
     setIsModalOpen(true);
     setNewProjectData({
+      id:project.project_id,
+      project_position: project.project_position,
       title: project.title,
       images: project.images,
-      imagePreviews: project.images,
+      imagePreviews: project.images.map((img) => img.url),
       description_one: project.description_one,
+      description_two: project.description_two, // Set description_two when editing
+      highlights: project.highlights, // Set highlights when editing
       testimonial_head: project.testimonial_head,
       testimonial_info: project.testimonial_info,
       testimonial_logo: project.testimonial_logo,
@@ -133,78 +81,229 @@ function CMSPortfolioAllProjects() {
     });
   };
 
-  const handleDeleteClick = (index) => {
-    setProjectToDeleteIndex(index);
-    setIsConfirmModalOpen(true);
+  const handleDeleteClick = async (projectId) => {
+    const confirmation = window.confirm("Are you sure you want to delete this project?");
+    if (!confirmation) return;
+  
+    try {
+      const response = await fetch('https://x5ax4kcefa.execute-api.ap-south-1.amazonaws.com/v1/deletePortfolioProject', {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          project_id: projectId
+        })
+      });
+  
+      const data = await response.json();
+      if (response.ok && data.status_code === 200) {
+        // Refresh the list of services after deletion
+        await fetchAllPortfolioProjects();
+       
+      } else {
+        console.error("Error deleting project:", data);
+        
+      }
+    } catch (error) {
+      console.error("Error deleting project:", error);
+      
+    }
   };
+  
 
-  const confirmDelete = () => {
-    handleDelete(projectToDeleteIndex);
-    setIsConfirmModalOpen(false);
-  };
 
-  const cancelDelete = () => {
-    setIsConfirmModalOpen(false);
-  };
-
-  const handleDelete = (index) => {
-    const updatedProjects = projects.filter((_, idx) => idx !== index);
-    setProjects(updatedProjects);
-  };
 
   const handleAddProject = () => {
     setIsEditing(false);
     setIsModalOpen(true);
     setNewProjectData({
+      id: null,
       title: "",
       images: [],
       imagePreviews: [],
       description_one: "",
+      description_two: "",
+      highlights: [], // Reset highlights for new project
       testimonial_head: "",
       testimonial_info: "",
       testimonial_logo: "",
       testimonial_logo_alt: "",
+      project_position: projects.length + 1,
     });
   };
 
   const handleFormChange = (e) => {
-    const { name, value } = e.target;
-    if (name === "images") {
-      const files = Array.from(e.target.files);
-      const newImages = files.map((file) => ({
-        url: URL.createObjectURL(file),
-        alt: file.name,
-      }));
-      setNewProjectData((prevData) => ({
-        ...prevData,
-        images: newImages,
-        imagePreviews: newImages.map((image) => image.url),
-      }));
-    } else {
-      setNewProjectData((prevData) => ({ ...prevData, [name]: value }));
-    }
-  };
+    const { name, value, files, dataset } = e.target;
+    const index = dataset.index; // Get the index from data-index
 
-  const saveProject = () => {
-    if (isEditing) {
-      const updatedProjects = [...projects];
-      updatedProjects[currentProjectIndex] = newProjectData;
-      setProjects(updatedProjects);
+    if (name === "images" && files.length > 0) {
+    
+        const imagesArray = Array.from(files).map((file, index) => ({
+            alt: `Image ${index + 1}`,
+            file: file,
+        }));
+
+        setNewProjectData(prevData => ({
+            ...prevData,
+            images: imagesArray,
+            imagePreviews: imagesArray.map(img => URL.createObjectURL(img.file)),
+        }));
+    } else if (name === "testimonial_logo" && files.length > 0) {
+        const logoFile = files[0];
+        setNewProjectData(prevData => ({
+            ...prevData,
+            testimonial_logo: logoFile,
+            
+        }));
+    } else if (name === "heading" || name === "info") {
+        // Update the highlights based on the index
+        setNewProjectData(prevData => {
+            const updatedHighlights = [...prevData.highlights];
+            updatedHighlights[index] = {
+                ...updatedHighlights[index],
+                [name]: value,
+            };
+            return { ...prevData, highlights: updatedHighlights };
+        });
     } else {
-      setProjects([...projects, newProjectData]);
+        setNewProjectData({ ...newProjectData, [name]: value });
     }
-    setIsModalOpen(false);
-    setNewProjectData({
-      title: "",
-      images: [],
-      imagePreviews: [],
-      description_one: "",
-      testimonial_head: "",
-      testimonial_info: "",
-      testimonial_logo: "",
-      testimonial_logo_alt: "",
-    });
+};
+
+
+
+const saveProject = async () => {
+  try {
+      const uploadedImageURLs = [];
+      const sanitizedHeading = newProjectData.testimonial_logo_alt.toLowerCase().replace(/\s+/g, '-').replace(/[^\w\-]+/g, '');
+
+      // Upload images
+      for (const image of newProjectData.images) {
+          let imageUrl="";
+
+          if (image.file instanceof Blob) {
+              // Convert to Base64 and upload if it's a file (Blob)
+              const base64Image = await getBase64(image.file); // Make sure this is a valid Blob
+              const originalFileName = image.file.name;
+
+              const uploadImageResponse = await fetch(`https://61ssq7s0b4.execute-api.ap-south-1.amazonaws.com/v1/uploadNewPortfolioProjectImage?project=${sanitizedHeading}`, {
+                  method: "POST",
+                  headers: {
+                      "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify({
+                      file_name: originalFileName,
+                      file_data: base64Image,
+                  }),
+              });
+
+              if (!uploadImageResponse.ok) {
+                  throw new Error(`Image upload failed with status ${uploadImageResponse.status}`);
+              }
+
+              const uploadImageData = await uploadImageResponse.json();
+              imageUrl = uploadImageData.object_url;
+          } else if (typeof image.url === "string") {
+              // Use existing image URL if it's already a URL
+              imageUrl = image.url;
+          } 
+
+          uploadedImageURLs.push({
+                  alt: `Description for ${image.alt || 'Uploaded Image'}`,
+                  url: imageUrl,
+              });
+          
+      }
+
+      // Upload testimonial logo if exists
+      let uploadedTestimonialLogo = "";
+      if (newProjectData.testimonial_logo) {
+          const logoFile = newProjectData.testimonial_logo;
+
+          if (logoFile instanceof Blob) {
+              const base64Logo = await getBase64(logoFile); // Ensure this is a valid Blob
+              const originalLogoFileName = logoFile.name;
+
+              const uploadLogoResponse = await fetch(`https://61ssq7s0b4.execute-api.ap-south-1.amazonaws.com/v1/uploadNewPortfolioProjectImage?project=${sanitizedHeading}`, {
+                  method: "POST",
+                  headers: {
+                      "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify({
+                      file_name: originalLogoFileName,
+                      file_data: base64Logo,
+                  }),
+              });
+
+              if (!uploadLogoResponse.ok) {
+                  throw new Error(`Logo upload failed with status ${uploadLogoResponse.status}`);
+              }
+
+              const uploadLogoData = await uploadLogoResponse.json();
+              uploadedTestimonialLogo = uploadLogoData.object_url; // Get logo URL
+          } 
+      }
+
+      // Construct the request body for the project
+      const requestBody = {
+          project_id: newProjectData.id || generateRandomId(24),
+          title: newProjectData.title,
+          description_one: newProjectData.description_one,
+          description_two: newProjectData.description_two,
+          project_position: newProjectData.project_position,
+          highlights: newProjectData.highlights,
+          testimonial_head: newProjectData.testimonial_head,
+          testimonial_info: newProjectData.testimonial_info,
+          testimonial_logo:  uploadedTestimonialLogo || newProjectData.testimonial_logo, // Testimonial logo URL
+          testimonial_logo_alt: newProjectData.testimonial_logo_alt,
+          images: uploadedImageURLs.length ? uploadedImageURLs : newProjectData.images, // Ensure this is the correct reference
+      };
+
+      const method = isEditing ? "PUT" : "POST";
+      const apiEndpoint = isEditing
+          ? "https://jr6wb5i8j4.execute-api.ap-south-1.amazonaws.com/v1/updatePortfolioProject"
+          : "https://ta5zlkxdba.execute-api.ap-south-1.amazonaws.com/v1/createPortfolioProject";
+
+      const apiResponse = await fetch(apiEndpoint, {
+          method: method,
+          headers: {
+              "Content-Type": "application/json",
+          },
+          body: JSON.stringify(requestBody),
+      });
+
+      if (!apiResponse.ok) {
+          throw new Error(`API request failed with status ${apiResponse.status}`);
+      }
+
+
+
+    await fetchAllPortfolioProjects(); // Refresh the list
+    handleCloseModal(); // Close the modal
+
+  } catch (error) {
+      console.error("Error saving project:", error);
+      
+  }
+};
+
+
+const handleCloseModal = () => {
+  setIsModalOpen(false);
+  setIsConfirmModalOpen(false);
+};
+
+
+const getBase64 = (file) => {
+  return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file); // Ensure you're passing the correct file
+      reader.onload = () => resolve(reader.result.split(',')[1]); // Return base64 string without header
+      reader.onerror = (error) => reject(error);
+  });
   };
+  
 
   return (
     <div className="cms-home">
@@ -229,15 +328,45 @@ function CMSPortfolioAllProjects() {
                 />
               ))}
             </div>
-            <p className="cms-banner-alt">{project.description_one}</p>
+            <p className="cms-banner-alt">
+              <b>Project position:</b> {project.project_position}
+            </p>
+            <p className="cms-banner-alt">
+              <b>Project Description 1:</b> {project.description_one}
+            </p>
+            <p className="cms-banner-alt">
+              <b>Project Description 2: </b>
+              {project.description_two}
+            </p>
+
+            {/* Highlights Section */}
+            <div className="highlights-section">
+              <h3 className="cms-banner-alt">
+                <b>Project Highlights:</b>
+              </h3>
+              <ul>
+                {project.highlights.map((highlight, idx) => (
+                  <li key={idx} className="cms-banner-alt">
+                    <strong>{highlight.heading}:</strong> {highlight.info}
+                  </li>
+                ))}
+              </ul>
+            </div>
+
             <div className="testimonial">
               <img
                 src={project.testimonial_logo}
                 alt={project.testimonial_logo_alt}
                 className="testimonial-logo"
               />
-              <h4 className="cms-banner-alt">{project.testimonial_head}</h4>
-              <p className="cms-banner-alt">{project.testimonial_info}</p>
+              <h4 className="cms-banner-alt">
+                <b>Project Testimonial Head: </b>
+                {project.testimonial_head}
+              </h4>
+              <p className="cms-banner-alt">
+                <b>Project Testimonial Info: </b>
+                {project.testimonial_info}
+              </p>
             </div>
             <div className="cms-box-actions">
               <button
@@ -248,7 +377,7 @@ function CMSPortfolioAllProjects() {
               </button>
               <button
                 className="cms-action-button banner-delete-button"
-                onClick={() => handleDeleteClick(index)}
+                onClick={() => handleDeleteClick(project.project_id)}
               >
                 <img src={Dustbin} alt="Delete" className="cms-action-icon" />
               </button>
@@ -267,9 +396,20 @@ function CMSPortfolioAllProjects() {
             <form
               onSubmit={(e) => {
                 e.preventDefault();
-                saveProject();
+                setIsConfirmModalOpen(true);
               }}
             >
+              <label>
+                Position:
+                <input
+                  type="number"
+                  name="project_position"
+                  className="cms-input"
+                  value={newProjectData.project_position}
+                  onChange={handleFormChange}
+                  required
+                />
+              </label>
               <label>
                 Title:
                 <input
@@ -282,13 +422,22 @@ function CMSPortfolioAllProjects() {
                 />
               </label>
               <label>
-                Description:
+                Description One:
                 <textarea
                   name="description_one"
                   className="cms-input"
                   value={newProjectData.description_one}
                   onChange={handleFormChange}
                   required
+                />
+              </label>
+              <label>
+                Description Two:
+                <textarea
+                  name="description_two"
+                  className="cms-input"
+                  value={newProjectData.description_two}
+                  onChange={handleFormChange}
                 />
               </label>
               <label>
@@ -300,7 +449,6 @@ function CMSPortfolioAllProjects() {
                   multiple
                   className="cms-input"
                   onChange={handleFormChange}
-                  required
                 />
               </label>
 
@@ -313,22 +461,90 @@ function CMSPortfolioAllProjects() {
                 />
               ))}
 
+              {/* Highlights Input */}
+              <div className="highlights-input-section">
+                <h3 className="cms-banner-alt">Add Highlights:</h3>
+                {newProjectData.highlights.map((highlight, index) => (
+                  <div key={index} className="highlight-input-group">
+                    <label>
+                      Heading:
+                      <input
+                        type="text"
+                        name="heading"
+                        data-index={index}
+                        className="cms-input"
+                        value={highlight.heading}
+                        onChange={handleFormChange}
+                      />
+                    </label>
+                    <label>
+                      Info:
+                      <textarea
+                        name="info"
+                        data-index={index}
+                        className="cms-input"
+                        value={highlight.info}
+                        onChange={handleFormChange}
+                      />
+                    </label>
+                  </div>
+                ))}
+                <button
+                  type="button"
+                  className="cms-add-button"
+                  onClick={() =>
+                    setNewProjectData((prevData) => ({
+                      ...prevData,
+                      highlights: [
+                        ...prevData.highlights,
+                        { heading: "", info: "" },
+                      ],
+                    }))
+                  }
+                >
+                  Add Highlight
+                </button>
+              </div>
+              <br />
+              <label>
+                Testimonial Head:
+                <input
+                  type="text"
+                  name="testimonial_head"
+                  className="cms-input"
+                  value={newProjectData.testimonial_head}
+                  onChange={handleFormChange}
+                  required
+                />
+              </label>
+              <label>
+                Testimonial Info:
+                <textarea
+                  name="testimonial_info"
+                  className="cms-input"
+                  value={newProjectData.testimonial_info}
+                  onChange={handleFormChange}
+                  required
+                />
+              </label>
               <label>
                 Testimonial Logo:
                 <input
                   type="file"
                   name="testimonial_logo"
+                  accept="image/*"
                   className="cms-input"
-                  accept="image/*" // This restricts the file types to images
-                  onChange={handleFormChange} // Use a custom function to handle the image
-                  required
+                  onChange={handleFormChange}
                 />
               </label>
+              {/* Display Testimonial Logo Preview */}
               {newProjectData.testimonial_logo && (
-                
-                <img src={newProjectData.testimonial_logo} alt="Preview" className="cms-bannerimg-preview" />
-            
-            )}
+                <img
+                  src={newProjectData.testimonial_logo}
+                  alt="Testimonial Logo Preview"
+                  className="cms-bannerimg-preview"
+                />
+              )}
               <label>
                 Testimonial Logo Alt Text:
                 <input
@@ -344,28 +560,34 @@ function CMSPortfolioAllProjects() {
               <button type="submit" className="cms-upload-button">
                 {isEditing ? "Update Project" : "Add Project"}
               </button>
+              <button
+                type="button"
+                className="cms-close-button"
+                onClick={handleCloseModal}
+              >
+                Cancel
+              </button>
             </form>
-            <button
-              className="cms-close-button"
-              onClick={() => setIsModalOpen(false)}
-            >
-              Cancel
-            </button>
           </div>
         </div>
       )}
 
       {isConfirmModalOpen && (
         <div className="cms-modal-overlay">
-          <div className="cms-modal-content">
-            <h2 className="cms-modal-title">Confirm Delete</h2>
-            <p>Are you sure you want to delete this project?</p>
-            <button onClick={confirmDelete} className="cms-yes-button">
-              Yes, Delete
-            </button>
-            <button onClick={cancelDelete} className="cms-no-button">
-              Cancel
-            </button>
+          <div className="cms-confirm-modal-content">
+            <h2>Confirm Submission</h2>
+            <p>Are you sure you want to submit the changes?</p>
+            <div className="cms-button-container">
+              <button
+                className="cms-yes-button"
+                onClick={saveProject}
+              >
+                Yes
+              </button>
+              <button className="cms-no-button" onClick={handleCloseModal}>
+                No
+              </button>
+            </div>
           </div>
         </div>
       )}
