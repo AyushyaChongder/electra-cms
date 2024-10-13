@@ -294,6 +294,18 @@ const handleCloseModal = () => {
   setIsConfirmModalOpen(false);
 };
 
+const handleRemoveImage = (index) => {
+  const updatedImages = newProjectData.images.filter((_, i) => i !== index);
+  const updatedImagePreviews = newProjectData.imagePreviews.filter((_, i) => i !== index);
+  
+  // Ensure the state is updated properly
+  setNewProjectData((prevData) => ({
+    ...prevData,
+    images: updatedImages,
+    imagePreviews: updatedImagePreviews,
+  }));
+};
+
 
 const getBase64 = (file) => {
   return new Promise((resolve, reject) => {
@@ -452,14 +464,16 @@ const getBase64 = (file) => {
                 />
               </label>
 
-              {newProjectData.imagePreviews.map((preview, i) => (
-                <img
-                  key={i}
-                  src={preview}
-                  alt={`Preview ${i + 1}`}
-                  className="cms-bannerimg-preview"
-                />
+              <div className="image-previews">
+              {newProjectData.imagePreviews.map((preview, index) => (
+                <div key={index} className="image-preview">
+                  <img src={preview} className="cms-bannerimg-preview" alt={`Preview ${index}`} />
+                  <br />
+                  <button onClick={() => handleRemoveImage(index)} className="remove-image-button">Remove</button>
+              
+                </div>
               ))}
+            </div>
 
               {/* Highlights Input */}
               <div className="highlights-input-section">
