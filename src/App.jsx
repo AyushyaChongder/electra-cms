@@ -37,6 +37,8 @@ import CMSServicesPanelBoard from "./components/CMSServicesPanelBoard";
 import CMSServicesValue from "./components/CMSServicesValue";
 import CMSPortfolioAllProjects from "./components/CMSPortfolioAllProjects";
 import CMSAllProjectsIncheon from "./components/CMSAllProjectsIncheon";
+import CMSPortfolioProjectsNumbers from "./components/CMSPortfolioProjectsNumbers";
+import CMSAllProjectsNumbers from "./components/CMSAllProjectsNumbers";
 
 // New ProtectedRoute component to secure routes
 const ProtectedRoute = ({ children }) => {
@@ -343,8 +345,24 @@ export default function App() {
               </ProtectedRoute>
             }
           />
-          
-         
+
+          <Route
+            path="/cms-allprojects-numbers"
+            element={
+              <ProtectedRoute>
+                <CMSAllProjectsNumbers />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/cms-portfolioprojects-numbers"
+            element={
+              <ProtectedRoute>
+                <CMSPortfolioProjectsNumbers />
+              </ProtectedRoute>
+            }
+          />
 
           {/* Fallback route */}
           <Route path="*" element={<Navigate to="/login" replace />} />

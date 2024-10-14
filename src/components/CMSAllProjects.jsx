@@ -19,9 +19,9 @@ function CMSAllProjects() {
         />
 
         <CMSCard
-          title="Project Numbers"
-          description="Manage the Project"
-          editPath="/cms-allprojects-labs"
+          title="All Project Numbers"
+          description="Manage the Project Numbers"
+          editPath="/cms-allprojects-numbers"
         />
 
     
