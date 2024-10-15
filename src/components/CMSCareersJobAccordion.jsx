@@ -19,7 +19,6 @@ function CMSCareersJobAccordion() {
     skillsets: "",
     requirements: "",
     education: "",
-    benefits: "",
   });
 
   // Function to generate a 24-character alphanumeric ID
@@ -120,7 +119,6 @@ function CMSCareersJobAccordion() {
       skillsets: "",
       requirements: "",
       education: "",
-      benefits: "",
     });
   };
 
@@ -138,7 +136,6 @@ function CMSCareersJobAccordion() {
       skillsets: formData.skillsets.split('\n'), // Split by new line
       requirements: formData.requirements.split('\n'), // Split by new line
       education: formData.education,
-      benefits: formData.benefits,
       job_id: formData.job_id || generateRandomId(24), // Use the existing job_id
     };
   
@@ -184,23 +181,23 @@ function CMSCareersJobAccordion() {
   }
 
   return (
-    <div className="cms-banner-container">
+    <div className="cms-home">
       <div className="cms-banner-header">
-        <h1 className="cms-banner-title">Careers Job Accordion</h1>
+        <h1 className="cms-banner-title">Careers Jobs List</h1>
         <button className="cms-add-button" onClick={() => setIsModalOpen(true)}>
           Add New
         </button>
       </div>
-      <div className="cms-banner-gallery">
+      <div className="portfolio-container">
         {jobDetails.map((job, index) => (
-          <div key={index} className="cms-banner-box">
+          <div key={index} className="portfolio-card">
             <div className="cms-banner-details">
               <h2 className="cms-banner-title">{job.title}</h2>
-              <p className="cms-banner-alt">Location: {job.location}</p>
-              <p className="cms-banner-alt">Experience: {job.experience}</p>
-              <p className="cms-banner-alt">Status: {job.job_status}</p>
-              <p className="cms-banner-link">Description: {job.description}</p>
-              <p className="cms-banner-alt">Responsibilities:</p>
+              <p className="cms-banner-alt"><b>Location:</b> {job.location}</p>
+              <p className="cms-banner-alt"><b>Experience:</b> {job.experience}</p>
+              <p className="cms-banner-alt"><b>Status:</b> {job.job_status}</p>
+              <p className="cms-banner-link"><b>Description:</b> {job.description}</p>
+              <p className="cms-banner-alt"><b>Responsibilities:</b></p>
               <ul>
                 {job.responsibilities.map((resp, idx) => (
                   <li className="cms-banner-alt" key={idx}>
@@ -208,7 +205,7 @@ function CMSCareersJobAccordion() {
                   </li>
                 ))}
               </ul>
-              <p className="cms-banner-alt">Skillsets:</p>
+              <p className="cms-banner-alt"><b>Skillsets:</b></p>
               <ul>
                 {job.skillsets.map((skill, idx) => (
                   <li className="cms-banner-alt" key={idx}>
@@ -216,7 +213,7 @@ function CMSCareersJobAccordion() {
                   </li>
                 ))}
               </ul>
-              <p className="cms-banner-alt">Requirements:</p>
+              <p className="cms-banner-alt"><b>Requirements:</b></p>
               <ul>
                 {job.requirements.map((req, idx) => (
                   <li className="cms-banner-alt" key={idx}>
@@ -224,8 +221,8 @@ function CMSCareersJobAccordion() {
                   </li>
                 ))}
               </ul>
-              <p className="cms-banner-alt">Education: {job.education}</p>
-              <p className="cms-banner-alt">Benefits: {job.benefits}</p>
+              <p className="cms-banner-alt"><b>Education: </b>{job.education}</p>
+             
               <div className="cms-banner-actions">
                 <button
                   className="cms-action-button banner-edit-button"
@@ -343,16 +340,6 @@ function CMSCareersJobAccordion() {
                   name="education"
                   className="cms-input"
                   value={formData.education}
-                  onChange={handleFormChange}
-                  required
-                />
-              </label>
-              <label>
-                Benefits:
-                <textarea
-                  name="benefits"
-                  className="cms-input"
-                  value={formData.benefits}
                   onChange={handleFormChange}
                   required
                 />
