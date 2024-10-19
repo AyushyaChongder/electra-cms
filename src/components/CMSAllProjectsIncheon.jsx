@@ -7,6 +7,7 @@ import Dustbin from "../assets/img/dustbin.png";
 const CMSAllProjectsIncheon = () => {
   const [projects, setProjects] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
+  const [isLoading, setIsLoading] = useState(false); 
   const [formData, setFormData] = useState({
     id: null,
     project_position: null,
@@ -15,6 +16,7 @@ const CMSAllProjectsIncheon = () => {
     logoPreview: null,
     images: [],
     imagePreviews: [],
+    updated_at:"",
     bucket_folder_name:""
   });
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -43,6 +45,7 @@ const CMSAllProjectsIncheon = () => {
           (a, b) => a.project_position - b.project_position
         );
         setProjects(sortedProjects);
+        setIsLoading(false);
       } else {
         console.error("Failed to fetch projects:", response.data);
       }
@@ -55,12 +58,17 @@ const CMSAllProjectsIncheon = () => {
     fetchAllProjects();
   }, []);
 
+  if (isLoading) {
+    return <div className="loader">Loading...</div>;
+  }
+
+
   const handleAddNewClick = () => {
     setIsModalOpen(true);
     setIsEditing(false);
     setFormData({
       id: null,
-      project_position:projects.length + 1,
+      project_position:null,
       title: "",
       img: "",
       logoPreview: null,

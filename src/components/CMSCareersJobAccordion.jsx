@@ -19,6 +19,7 @@ function CMSCareersJobAccordion() {
     skillsets: "",
     requirements: "",
     education: "",
+    updated_at:"",
   });
 
   // Function to generate a 24-character alphanumeric ID
@@ -60,7 +61,9 @@ function CMSCareersJobAccordion() {
         job_id: job.job_id, // Ensure job_id is set for editing
         skillsets: job.skillsets.join('\n'), // Convert array to string for display
         responsibilities: job.responsibilities.join('\n'), // Ensure this is also handled
-        requirements: job.requirements.join('\n'), // Ensure this is also handled
+        requirements: job.requirements.join('\n'), 
+        updated_at:job.updated_at,
+        // Ensure this is also handled
     });
     setIsEditing(true)
     setIsModalOpen(true)
@@ -119,12 +122,16 @@ function CMSCareersJobAccordion() {
       skillsets: "",
       requirements: "",
       education: "",
+      updated_at: "",
     });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
+    // Get the current date and time in the desired format
+    const updatedAt = new Date().toISOString().slice(0, 19); // Format to "YYYY-MM-DDTHH:mm:ss"
+    
     // Prepare the request body
     const requestBody = {
       title: formData.title,
@@ -137,6 +144,7 @@ function CMSCareersJobAccordion() {
       requirements: formData.requirements.split('\n'), // Split by new line
       education: formData.education,
       job_id: formData.job_id || generateRandomId(24), // Use the existing job_id
+      updated_at: updatedAt
     };
   
     try {

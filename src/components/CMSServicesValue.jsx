@@ -16,6 +16,7 @@ function CMSServicesValue() {
     bullets_heading: '',
     bullets: '',
     images: [],
+    position:null,
     imagePreviews: []
   });
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
@@ -60,6 +61,7 @@ function CMSServicesValue() {
       bullets_heading: '',
       bullets: '',
       images: [],
+      position:null,
       imagePreviews: []
     });
   };
@@ -73,6 +75,7 @@ function CMSServicesValue() {
       description: section.description,
       bullets_heading: section.bullets_heading,
       bullets: section.bullets ? section.bullets.join('\n') : '',
+      position: section.position,
       images: section.images.map(img => ({
         alt: img.alt,
         src: img.src
@@ -189,6 +192,7 @@ const handleConfirmModalSubmit = async () => {
           bullets_heading: formData.bullets_heading,
           bullets: formData.bullets.split('\n'),
           images: uploadedImageURLs,
+          position: formData.position
       };
 
       const method = isEditing ? "PUT" : "POST";
@@ -283,6 +287,17 @@ return (
               setIsConfirmModalOpen(true);
             }}
           >
+             <label>
+                Position:
+                <input
+                  type="number"
+                  name="position"
+                  className="cms-input"
+                  value={formData.position}
+                  onChange={handleFormChange}
+                  required
+                />
+              </label>
             <label>
               Heading:
               <input

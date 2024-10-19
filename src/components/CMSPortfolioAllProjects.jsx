@@ -21,6 +21,7 @@ function CMSPortfolioAllProjects() {
     testimonial_logo: "",
     testimonial_logo_alt: "",
     project_position: null,
+    updated_at:"",
   });
 
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
@@ -78,6 +79,7 @@ function CMSPortfolioAllProjects() {
       testimonial_info: project.testimonial_info,
       testimonial_logo: project.testimonial_logo,
       testimonial_logo_alt: project.testimonial_logo_alt,
+      updated_at:project.updated_at,
     });
   };
 
@@ -129,7 +131,8 @@ function CMSPortfolioAllProjects() {
       testimonial_info: "",
       testimonial_logo: "",
       testimonial_logo_alt: "",
-      project_position: projects.length + 1,
+      project_position: null,
+      updated_at:"",
     });
   };
 
@@ -245,6 +248,10 @@ const saveProject = async () => {
           } 
       }
 
+       // Get the current date and time in the desired format
+     const updatedAt = new Date().toISOString().slice(0, 19); // Format to "YYYY-MM-DDTHH:mm:ss"
+    
+
       // Construct the request body for the project
       const requestBody = {
           project_id: newProjectData.id || generateRandomId(24),
@@ -258,6 +265,7 @@ const saveProject = async () => {
           testimonial_logo:  uploadedTestimonialLogo || newProjectData.testimonial_logo, // Testimonial logo URL
           testimonial_logo_alt: newProjectData.testimonial_logo_alt,
           images: uploadedImageURLs.length ? uploadedImageURLs : newProjectData.images, // Ensure this is the correct reference
+          updated_at: updatedAt, // Include updated_at timestamp
       };
 
       const method = isEditing ? "PUT" : "POST";

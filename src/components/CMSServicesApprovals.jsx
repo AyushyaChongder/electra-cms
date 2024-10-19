@@ -8,12 +8,14 @@ function CMSServicesApprovals() {
   const [sections, setSections] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+  const [isLoading, setIsLoading] = useState(false); 
   const [formData, setFormData] = useState({
     id: null,
     heading: '',
     description: '',
     bullets_heading: '',
     bullets: '',
+    position:null,
     images: [],
     imagePreviews: []
   });
@@ -59,6 +61,7 @@ function CMSServicesApprovals() {
       bullets_heading: '',
       bullets: '',
       images: [],
+      position:null,
       imagePreviews: []
     });
   };
@@ -72,6 +75,7 @@ function CMSServicesApprovals() {
       description: section.description,
       bullets_heading: section.bullets_heading,
       bullets: section.bullets ? section.bullets.join('\n') : '',
+      position: section.position,
       images: section.images.map(img => ({
         alt: img.alt,
         src: img.src
@@ -282,6 +286,17 @@ return (
               setIsConfirmModalOpen(true);
             }}
           >
+            <label>
+                Position:
+                <input
+                  type="number"
+                  name="position"
+                  className="cms-input"
+                  value={formData.position}
+                  onChange={handleFormChange}
+                  required
+                />
+              </label>
             <label>
               Heading:
               <input
