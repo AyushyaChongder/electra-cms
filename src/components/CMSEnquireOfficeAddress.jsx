@@ -75,7 +75,7 @@ function CMSEnquireOfficeAddress() {
   const handleCloseModal = () => {
     setIsModalOpen(false);
     setIsEditing(false);
-    setFormData({ id: '', address: '' });
+    setFormData({ id: '', address: '' ,address_type:''});
   };
 
   const generateUniqueId = () => {
@@ -120,7 +120,7 @@ function CMSEnquireOfficeAddress() {
         if (!response.ok) {
           throw new Error('Failed to create address');
         }
-        setAddresses([...addresses, { id: newAddressId, address: formData.address }]);
+        setAddresses([...addresses, { id: newAddressId, address: formData.address,address_type:formData.address_type }]);
       } catch (error) {
         console.error('Error creating address:', error);
         setError('Failed to create address. Please try again.');
@@ -150,6 +150,7 @@ function CMSEnquireOfficeAddress() {
         {addresses.map((address) => (
           <div key={address.id} className="cms-banner-box">
             <div className="cms-banner-details">
+            <p className="cms-banner-alt">Address Type: {address.address_type}</p>
               <p className="cms-banner-alt">Address: {address.address}</p>
               <div className="cms-banner-actions">
                 <button
@@ -175,6 +176,16 @@ function CMSEnquireOfficeAddress() {
           <div className="cms-modal-content">
             <h2>{isEditing ? "Edit Address" : "Add New Address"}</h2>
             <form onSubmit={handleSubmit}>
+            <label>
+                Address Type:
+                <input type="text"
+                  name="address_type"
+                  className="cms-input"
+                  value={formData.address_type}
+                  onChange={handleFormChange}
+                  required
+                />
+              </label>
               <label>
                 Address:
                 <textarea
@@ -185,7 +196,7 @@ function CMSEnquireOfficeAddress() {
                   required
                 />
               </label>
-              <button type="submit" className="cms-upload-button">
+              <button type="submit" className="cms-upload-button" disabled={isLoading}>
                 {isEditing ? "Update Address" : "Add Address"}
               </button>
               <button type="button" className="cms-close-button" onClick={handleCloseModal}>

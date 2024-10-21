@@ -17,6 +17,7 @@ function CMSServicesMaintainance() {
     bullets: '',
     images: [],
     position:null,
+    updated_at:"",
     imagePreviews: []
   });
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
@@ -38,7 +39,9 @@ function CMSServicesMaintainance() {
       const result = await response.json();
 
       if (result.status_code === 200) {
-        setSections(result.data);
+        const sortedProjects = result.data.sort(
+          (a, b) => a.position - b.position)
+        setSections(sortedProjects);
       } else {
         console.error("Error fetching data:", result);
       }
@@ -62,6 +65,7 @@ function CMSServicesMaintainance() {
       bullets: '',
       images: [],
       position:null,
+      updated_at:"",
       imagePreviews: []
     });
   };
@@ -76,6 +80,7 @@ function CMSServicesMaintainance() {
       bullets_heading: section.bullets_heading,
       bullets: section.bullets ? section.bullets.join('\n') : '',
       position: section.position,
+      updated_at:section.updated_at,
       images: section.images.map(img => ({
         alt: img.alt,
         src: img.src
@@ -185,6 +190,10 @@ const handleConfirmModalSubmit = async () => {
           });
       }
 
+       // Get the current date and time in the desired format
+     const updatedAt = new Date().toISOString().slice(0, 19); // Format to "YYYY-MM-DDTHH:mm:ss"
+
+
       const cardData = {
           service_id: formData.id || generateRandomId(24),
           heading: formData.heading,
@@ -192,6 +201,7 @@ const handleConfirmModalSubmit = async () => {
           bullets_heading: formData.bullets_heading,
           bullets: formData.bullets.split('\n'),
           images: uploadedImageURLs,
+          updated_at:updatedAt,
           position: formData.position
       };
 
