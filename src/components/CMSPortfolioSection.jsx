@@ -154,6 +154,15 @@ const CMSPortfolioSection = () => {
                 className="cms-image-preview-form"
               />
             )}
+              <label>
+                Alt Text:
+                <input
+                  type="text"
+                  name="title"
+                  className="cms-input"
+                  onChange={handleChange}
+                />
+              </label>
             <label className="cms-label">Description</label>
             <input
               className="cms-input"

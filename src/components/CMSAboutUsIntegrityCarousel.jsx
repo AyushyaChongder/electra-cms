@@ -78,7 +78,7 @@ const CMSAboutUsIntegrityCarousel = () => {
       description: "",
       url: null,
       imagePreview: "",
-      position: null
+      position: null,
     });
   };
 
@@ -237,39 +237,44 @@ const CMSAboutUsIntegrityCarousel = () => {
   };
 
   const handleDeleteClick = async (cardId) => {
-     // Ask for confirmation before proceeding with deletion
-     const confirmDelete = window.confirm("Are you sure you want to delete this slide card?");
-     if (!confirmDelete) return;
-   
-     try {
-       // Call the delete API
-       const response = await fetch("https://1njnsiuhch.execute-api.ap-south-1.amazonaws.com/v1/deleteAboutUsCarousel", {
-         method: "DELETE",
-         headers: {
-           "Content-Type": "application/json",
-         },
-         body: JSON.stringify({
-           id: cardId,
-         }),
-       });
-   
-       if (!response.ok) {
-         throw new Error(`Delete failed with status ${response.status}`);
-       }
-   
-       const data = await response.json();
-       if (data.status_code === 200) {
-         // Remove the deleted banner from the state
-         const updatedSlideCards = cards.filter((card) => card.id !== cardId);
-         setCards(updatedSlideCards);
-         setError(null); // Clear any previous errors
-       } else {
-         throw new Error("Failed to delete slide card");
-       }
-     } catch (error) {
-       console.error("Error deleting slide card:", error);
-       setError("Failed to delete slide card. Please try again.");
-     }
+    // Ask for confirmation before proceeding with deletion
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this slide card?"
+    );
+    if (!confirmDelete) return;
+
+    try {
+      // Call the delete API
+      const response = await fetch(
+        "https://1njnsiuhch.execute-api.ap-south-1.amazonaws.com/v1/deleteAboutUsCarousel",
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            id: cardId,
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`Delete failed with status ${response.status}`);
+      }
+
+      const data = await response.json();
+      if (data.status_code === 200) {
+        // Remove the deleted banner from the state
+        const updatedSlideCards = cards.filter((card) => card.id !== cardId);
+        setCards(updatedSlideCards);
+        setError(null); // Clear any previous errors
+      } else {
+        throw new Error("Failed to delete slide card");
+      }
+    } catch (error) {
+      console.error("Error deleting slide card:", error);
+      setError("Failed to delete slide card. Please try again.");
+    }
   };
 
   if (isLoading) {
@@ -379,6 +384,15 @@ const CMSAboutUsIntegrityCarousel = () => {
                   className="cms-bannerimg-preview"
                 />
               )}
+              <label>
+                Alt Text:
+                <input
+                  type="text"
+                  name="title"
+                  className="cms-input"
+                  onChange={handleFormChange}
+                />
+              </label>
 
               <button type="submit" className="cms-upload-button">
                 {isEditing ? "Update Slide" : "Add Slide"}

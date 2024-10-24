@@ -390,6 +390,15 @@ const handleRemoveImage = (index) => {
             className="cms-bannerimg-preview"
           />
         )}
+          <label>
+                Logo Alt Text:
+                <input
+                  type="text"
+                  name="title"
+                  className="cms-input"
+                  onChange={handleFormChange}
+                />
+              </label>
         <label>
           Project Images:
           {formData.images.map((image, index) => (
