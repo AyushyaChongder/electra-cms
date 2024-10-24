@@ -444,6 +444,15 @@ function CMSServicesDesignConsulting() {
                   className="cms-bannerimg-preview"
                 />
               ))}
+              <label>
+                Alt Text For Images:
+                <textarea
+                  type="text"
+                  name="title"
+                  className="cms-input"
+                  onChange={handleFormChange}
+                />
+              </label>
 
               <button type="submit" className="cms-upload-button">
                 {isEditing ? "Update Service" : "Add Service"}
