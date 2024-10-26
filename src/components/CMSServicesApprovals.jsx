@@ -1,4 +1,6 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
+import { Tooltip } from "@mui/material";
+import InfoIcon from "@mui/icons-material/Info";
 import "../styles.css";
 import Pencil from "../assets/img/pencil.png";
 import Dustbin from "../assets/img/dustbin.png";
@@ -7,16 +9,15 @@ function CMSServicesApprovals() {
   const [sections, setSections] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     id: null,
     heading: "",
     description: "",
     bullets_heading: "",
     bullets: "",
+    images: [],
     position: null,
     updated_at: "",
-    images: [],
     imagePreviews: [],
   });
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
@@ -42,13 +43,55 @@ function CMSServicesApprovals() {
       );
       const result = await response.json();
 
-      if (result.status_code === 200) {
-        const sortedProjects = result.data.sort(
-          (a, b) => a.position - b.position
-        );
-        setSections(sortedProjects);
+      if (result.status_code == 200) {
+        const data = result.data;
+
+        // Step 1: Group objects by position
+        const positionGroups = data.reduce((acc, item) => {
+          const pos = item.position;
+          if (!acc[pos]) {
+            acc[pos] = [];
+          }
+          acc[pos].push(item);
+          return acc;
+        }, {});
+
+        // Step 2: Sort groups by position, and within each group, sort by updated_at
+        const sortedData = [];
+        const uniquePositions = Object.keys(positionGroups).sort(
+          (a, b) => a - b
+        ); // Sort positions numerically
+
+        uniquePositions.forEach((pos) => {
+          let group = positionGroups[pos];
+
+          // If multiple items share the same position, sort them by updated_at
+          if (group.length > 1) {
+            group.sort((a, b) => {
+              const aUpdatedAt = a.updated_at
+                ? new Date(a.updated_at).getTime()
+                : 0;
+              const bUpdatedAt = b.updated_at
+                ? new Date(b.updated_at).getTime()
+                : 0;
+              return bUpdatedAt - aUpdatedAt; // Most recent first
+            });
+          }
+
+          // Push sorted group to the final sorted data list
+          sortedData.push(...group);
+        });
+
+        // Step 3: Reassign positions sequentially
+        let currentPosition = 1;
+        sortedData.forEach((item) => {
+          item.position = currentPosition++;
+        });
+
+        // Step 4: Update the state with the final sorted and updated data
+        setSections(sortedData);
       } else {
-        console.error("Error fetching data:", result);
+        console.log(result.status_code);
       }
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -68,9 +111,9 @@ function CMSServicesApprovals() {
       description: "",
       bullets_heading: "",
       bullets: "",
-      images: [],
       position: null,
       updated_at: "",
+      images: [],
       imagePreviews: [],
     });
   };
@@ -251,10 +294,13 @@ function CMSServicesApprovals() {
   return (
     <div className="cms-home">
       <div className="cms-banner-header">
-        <h1 className="cms-banner-title">Approvals & Compliances Services</h1>
+        <h1 className="cms-banner-title">Approvals & Compliance Services</h1>
         <button className="cms-add-button" onClick={handleAddNewClick}>
           Add Service
         </button>
+      </div>
+      <div className="cms-banner-title">
+        <h6>All image file types should be webp format</h6>
       </div>
 
       <div className="cms-container">
@@ -325,6 +371,7 @@ function CMSServicesApprovals() {
                   required
                 />
               </label>
+
               <label>
                 Heading:
                 <input
@@ -335,17 +382,25 @@ function CMSServicesApprovals() {
                   onChange={handleFormChange}
                 />
               </label>
+
               <label>
                 Description:
-                <textarea
-                  name="description"
-                  className="cms-input"
-                  value={formData.description}
-                  onChange={handleFormChange}
-                />
+                <div className="tooltip-wrapper">
+                  <textarea
+                    name="description"
+                    className="cms-input cms-textarea"
+                    value={formData.description}
+                    onChange={handleFormChange}
+                    style={{ height: "120px" }} // Increase textarea height
+                  />
+                  <Tooltip title="Enter a brief description of the service">
+                    <InfoIcon className="tooltip-icon" />
+                  </Tooltip>
+                </div>
               </label>
+
               <label>
-                Bullet Heading: {/* New input for bullet_heading */}
+                Bullet Heading:
                 <input
                   type="text"
                   name="bullets_heading"
@@ -354,16 +409,24 @@ function CMSServicesApprovals() {
                   onChange={handleFormChange}
                 />
               </label>
+
               <label>
                 Bullets (each on a new line):
-                <textarea
-                  name="bullets"
-                  className="cms-input"
-                  value={formData.bullets}
-                  onChange={handleFormChange}
-                  placeholder="Enter each bullet point on a new line"
-                />
+                <div className="tooltip-wrapper">
+                  <textarea
+                    name="bullets"
+                    className="cms-input cms-textarea"
+                    value={formData.bullets}
+                    onChange={handleFormChange}
+                    placeholder="Enter each bullet point on a new line"
+                    style={{ height: "100px" }} // Increase textarea height
+                  />
+                  <Tooltip title="Enter each bullet point on a new line.">
+                    <InfoIcon className="tooltip-icon" />
+                  </Tooltip>
+                </div>
               </label>
+
               <label>
                 Images (Max 2):
                 <input
@@ -375,6 +438,7 @@ function CMSServicesApprovals() {
                   onChange={handleFormChange}
                 />
               </label>
+
               {formData.imagePreviews.map((preview, i) => (
                 <img
                   key={i}
@@ -385,16 +449,23 @@ function CMSServicesApprovals() {
               ))}
               <label>
                 Alt Text For Images:
-                <textarea
-                  type="text"
-                  name="title"
-                  className="cms-input"
-                  onChange={handleFormChange}
-                />
+                <div className="tooltip-wrapper">
+                  <Tooltip title="Alt text for each image should be seaprated by comma">
+                    <InfoIcon className="tooltip-icon"></InfoIcon>
+                  </Tooltip>
+                  <textarea
+                    type="text"
+                    name="title"
+                    className="cms-input"
+                    onChange={handleFormChange}
+                  />
+                </div>
               </label>
+
               <button type="submit" className="cms-upload-button">
                 {isEditing ? "Update Service" : "Add Service"}
               </button>
+
               <button
                 type="button"
                 className="cms-close-button"

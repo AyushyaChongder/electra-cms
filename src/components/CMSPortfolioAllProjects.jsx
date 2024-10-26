@@ -3,6 +3,8 @@ import axios from "axios";
 import "../styles.css";
 import Pencil from "../assets/img/pencil.png";
 import Dustbin from "../assets/img/dustbin.png";
+import { Tooltip } from "@mui/material";
+import InfoIcon from "@mui/icons-material/Info";
 
 function CMSPortfolioAllProjects() {
   const [projects, setProjects] = useState([]);
@@ -333,6 +335,9 @@ const getBase64 = (file) => {
           Add Project
         </button>
       </div>
+      <div>
+        <h6 className="cms-banner-title"><u>All image file types should be webp format</u></h6>
+      </div>
 
       <div className="portfolio-container">
         {projects.map((project, index) => (
@@ -448,6 +453,7 @@ const getBase64 = (file) => {
                   className="cms-input"
                   value={newProjectData.description_one}
                   onChange={handleFormChange}
+                  style={{ height: "120px" }}
                   required
                 />
               </label>
@@ -458,6 +464,7 @@ const getBase64 = (file) => {
                   className="cms-input"
                   value={newProjectData.description_two}
                   onChange={handleFormChange}
+                  style={{ height: "120px" }}
                 />
               </label>
               <label>
@@ -483,13 +490,20 @@ const getBase64 = (file) => {
               ))}
             </div>
             <label>
+
                 Alt Text For Images:
-                <textarea
-                  type="text"
-                  name="title"
-                  className="cms-input"
-                  onChange={handleFormChange}
-                />
+                <Tooltip title="Alt text for each image should be separated by a comma.">
+                  <InfoIcon className="tooltip-icon" />
+                </Tooltip>
+                <div className="tooltip-wrapper">
+                  <textarea
+                    type="text"
+                    name="title"
+                    className="cms-input"
+                    onChange={handleFormChange}
+                  />
+                </div>
+                
               </label>
 
               {/* Highlights Input */}
@@ -516,6 +530,7 @@ const getBase64 = (file) => {
                         className="cms-input"
                         value={highlight.info}
                         onChange={handleFormChange}
+                        style={{ height: "120px" }}
                       />
                     </label>
                   </div>
@@ -555,6 +570,7 @@ const getBase64 = (file) => {
                   className="cms-input"
                   value={newProjectData.testimonial_info}
                   onChange={handleFormChange}
+                  style={{ height: "120px" }}
                   required
                 />
               </label>

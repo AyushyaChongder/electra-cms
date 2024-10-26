@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import "../styles.css";
 import Pencil from "../assets/img/pencil.png";
 import Dustbin from "../assets/img/dustbin.png";
+import { Tooltip } from "@mui/material";
+import InfoIcon from "@mui/icons-material/Info";
 
 function CMSEnquireOfficeAddress() {
   const [addresses, setAddresses] = useState([]);
@@ -188,13 +190,20 @@ function CMSEnquireOfficeAddress() {
               </label>
               <label>
                 Address:
-                <textarea
+                <div className='tooltip-wrapper'>
+                  <Tooltip title='Adrress Line 1- Name of the company, Line 2- Tagline of the company, Line -3 Address Line 4- City, State, Country, Pincode. Comma after every line.'>
+                    <InfoIcon className="tooltip-icon" />
+                  </Tooltip>
+                  <textarea
                   name="address"
                   className="cms-input"
                   value={formData.address}
                   onChange={handleFormChange}
+                  style={{ height: "120px" }}
                   required
                 />
+
+                </div>
               </label>
               <button type="submit" className="cms-upload-button" disabled={isLoading}>
                 {isEditing ? "Update Address" : "Add Address"}

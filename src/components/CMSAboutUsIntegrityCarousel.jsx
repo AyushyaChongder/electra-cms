@@ -293,6 +293,10 @@ const CMSAboutUsIntegrityCarousel = () => {
           Add Slide
         </button>
       </div>
+      <div>
+        <h4 className="cms-banner-title">Image Dimension: 755 px x 495 px</h4>
+        <h4 className="cms-banner-title">Image File Type: webp</h4>
+      </div>
 
       <div className="cms-container">
         {cards.map((card) => (

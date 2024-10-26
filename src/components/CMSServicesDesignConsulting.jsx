@@ -299,6 +299,9 @@ function CMSServicesDesignConsulting() {
           Add Service
         </button>
       </div>
+      <div className="cms-banner-title">
+        <h6>All image file types should be webp format</h6>
+      </div>
 
       <div className="cms-container">
         {sections.map((section, index) => (
@@ -446,12 +449,17 @@ function CMSServicesDesignConsulting() {
               ))}
               <label>
                 Alt Text For Images:
-                <textarea
-                  type="text"
-                  name="title"
-                  className="cms-input"
-                  onChange={handleFormChange}
-                />
+                <div className="tooltip-wrapper">
+                  <Tooltip title="Alt text for each image should be seaprated by comma">
+                    <InfoIcon className="tooltip-icon"></InfoIcon>
+                  </Tooltip>
+                  <textarea
+                    type="text"
+                    name="title"
+                    className="cms-input"
+                    onChange={handleFormChange}
+                  />
+                </div>
               </label>
 
               <button type="submit" className="cms-upload-button">

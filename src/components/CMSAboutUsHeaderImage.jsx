@@ -141,6 +141,10 @@ function CMSAboutUsHeaderImage() {
       <div className="cms-banner-header">
         <h1 className="cms-banner-title">About Us Header Image</h1>
       </div>
+      <div>
+        <h4 className="cms-banner-title">Image Dimensions: 3510px x 2647px</h4>
+        <h4 className="cms-banner-title">Image File Type: .webp</h4>
+      </div>
 
       <div className="cms-container">
         {headerImage.map((image) => (

@@ -2,6 +2,8 @@ import React, { useState,useEffect } from "react";
 import "../styles.css"; // Import your CSS file
 import Pencil from "../assets/img/pencil.png";
 import Dustbin from "../assets/img/dustbin.png";
+import { Tooltip } from "@mui/material";
+import InfoIcon from "@mui/icons-material/Info";
 
 function CMSCareersJobAccordion() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -138,6 +140,7 @@ function CMSCareersJobAccordion() {
       location: formData.location,
       experience: formData.experience,
       job_status: formData.job_status || "Open",
+      job_priority: formData.job_priority || "Normal",
       description: formData.description,
       responsibilities: formData.responsibilities.split('\n'), // Split by new line
       skillsets: formData.skillsets.split('\n'), // Split by new line
@@ -204,6 +207,7 @@ function CMSCareersJobAccordion() {
               <p className="cms-banner-alt"><b>Location:</b> {job.location}</p>
               <p className="cms-banner-alt"><b>Experience:</b> {job.experience}</p>
               <p className="cms-banner-alt"><b>Status:</b> {job.job_status}</p>
+              <p className="cms-banner-alt"><b>Priority:</b> {job.job_priority}</p>
               <p className="cms-banner-link"><b>Description:</b> {job.description}</p>
               <p className="cms-banner-alt"><b>Responsibilities:</b></p>
               <ul>
@@ -302,44 +306,81 @@ function CMSCareersJobAccordion() {
                 </select>
               </label>
               <label>
+                Job Priority:
+                <select
+                  name="job_priority"
+                  className="cms-input"
+                  value={formData.job_priority}
+                  onChange={handleFormChange}
+                  required
+                >
+                  <option value="High">High</option>
+                  <option value="Normal">Normal</option>
+                </select>
+              </label>
+              <label>
                 Description:
-                <textarea
+                <div className="tooltip-wrapper">
+                  <Tooltip title='Enter the job description.'>
+                    <InfoIcon className="tooltip-icon"></InfoIcon>
+                  </Tooltip>
+                  <textarea
                   name="description"
                   className="cms-input"
                   value={formData.description}
                   onChange={handleFormChange}
+                  style={{ height: "120px" }}
                   required
                 />
+                </div>
               </label>
               <label>
                 Responsibilities:
+                <div className="tooltip-wrapper">
+                <Tooltip title='Enter each responsibility in a new line'>
+                  <InfoIcon className="tooltip-icon"></InfoIcon>
+                </Tooltip>
                 <textarea
                   name="responsibilities"
                   className="cms-input"
                   value={formData.responsibilities}
                   onChange={handleFormChange}
+                  style={{ height: "120px" }}
                   required
                 />
+                </div>
               </label>
               <label>
                 Skillsets:
+                <div className="tooltip-wrapper">
+                <Tooltip title='Enter each skillset in a new line'>
+                  <InfoIcon className="tooltip-icon"/>
+                </Tooltip>
                 <textarea
                   name="skillsets"
                   className="cms-input"
                   value={formData.skillsets}
                   onChange={handleFormChange}
+                  style={{ height: "120px" }}
                   required
                 />
+                </div>
               </label>
               <label>
                 Requirements:
+                <div className="tooltip-wrapper">
+                <Tooltip title='Enter each requirement in a new line'>
+                  <InfoIcon className="tooltip-icon"/>
+                </Tooltip>
                 <textarea
                   name="requirements"
                   className="cms-input"
                   value={formData.requirements}
                   onChange={handleFormChange}
+                  style={{ height: "120px" }}
                   required
                 />
+                </div>
               </label>
               <label>
                 Education:

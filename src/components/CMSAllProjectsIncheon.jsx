@@ -3,6 +3,8 @@ import axios from "axios";
 import "../styles.css";
 import Pencil from "../assets/img/pencil.png";
 import Dustbin from "../assets/img/dustbin.png";
+import { Tooltip } from "@mui/material";
+import InfoIcon from "@mui/icons-material/Info";
 
 const CMSAllProjectsIncheon = () => {
   const [projects, setProjects] = useState([]);
@@ -300,6 +302,9 @@ const handleRemoveImage = (index) => {
           Add New Project
         </button>
       </div>
+      <div>
+        <h6 className="cms-banner-title"><u>All image file types should be webp format</u></h6>
+      </div>
 
       <div className="cms-project-list">
         {projects.map((project, index) => (
@@ -456,15 +461,15 @@ const handleRemoveImage = (index) => {
             Add Image
           </button>
         </label>
-        <label>
-                Alt Text For Images:
-                <textarea
-                  type="text"
-                  name="title"
-                  className="cms-input"
-                  onChange={handleFormChange}
-                />
-              </label>
+        {/* <label>
+        Alt Text For Images:
+        <textarea
+          type="text"
+          name="title"
+          className="cms-input"
+          onChange={handleFormChange}
+        />
+      </label> */}
         <button type="submit" className="cms-upload-button">
           {isEditing ? "Update Project" : "Add Project"}
         </button>
