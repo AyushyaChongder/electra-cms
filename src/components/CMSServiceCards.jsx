@@ -281,6 +281,9 @@ const CMSServiceCards = () => {
           Add Card
         </button>
       </div>
+      <div>
+        <h5 className="cms-banner-title">Image File Type: .webp</h5>
+      </div>
 
       <div className="cms-container">
         {cards.map((card) => (

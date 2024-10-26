@@ -26,11 +26,11 @@ function CMSHome() {
           editPath="/cms-service-cards" 
         />
        
-        <CMSCard 
+        {/* <CMSCard 
           title="Home Portfolio" 
           description="Manage the Home Portfolio section" 
           editPath="/cms-home-portfolio" 
-        />
+        /> */}
         
         <CMSCard 
           title="Home Client" 

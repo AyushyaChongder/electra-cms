@@ -145,6 +145,11 @@ const CMSClients = () => {
           Add Client
         </button>
       </div>
+      <div>
+        <h4 className="cms-banner-title"> Image Dimesnions: 100px  x 100px</h4>
+        <h4 className="cms-banner-title"> Image File type: .webp</h4>
+
+      </div>
 
       {/* Client cards */}
       <div className="cms-container">

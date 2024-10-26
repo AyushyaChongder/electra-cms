@@ -280,10 +280,15 @@ const linkOptions = {
   return (
     <div className="cms-banner-container">
       <div className="cms-banner-header">
-        <h1 className="cms-banner-title">Banner Gallery</h1>
+        <h1 className="cms-banner-title">Banner Gallery </h1>        
         <button className="cms-add-button" onClick={handleAddNewClick}>
           Add New
         </button>
+      </div>
+      <div>
+        <h6 className="cms-banner-title">Web Image Dimensions: 5600 px x 2360px</h6>
+        <h6 className="cms-banner-title">Mobile Image Dimensions: 1500 px x 2084px</h6>
+        <h6 className="cms-banner-title">Image File type allowed: webp</h6>
       </div>
       <div className="cms-banner-gallery">
         {banners.map((banner) => (

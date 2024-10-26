@@ -298,6 +298,11 @@ const CMSTestimonial = () => {
           Add Testimonial
         </button>
       </div>
+      <div>
+        <h5 className="cms-banner-title">Image Dimesnion: 34 px x 34  px</h5>
+
+        <h5 className="cms-banner-title">Image File Type: .webp</h5>
+      </div>
 
       {/* Testimonial cards */}
       <div className="cms-container">
