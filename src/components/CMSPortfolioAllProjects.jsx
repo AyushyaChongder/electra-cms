@@ -482,6 +482,15 @@ const getBase64 = (file) => {
                 </div>
               ))}
             </div>
+            <label>
+                Alt Text For Images:
+                <textarea
+                  type="text"
+                  name="title"
+                  className="cms-input"
+                  onChange={handleFormChange}
+                />
+              </label>
 
               {/* Highlights Input */}
               <div className="highlights-input-section">

@@ -186,6 +186,15 @@ function CMSAboutUsHeaderImage() {
                 className="cms-bannerimg-preview"
               />
             )}
+            <label>
+                Alt Text:
+                <input
+                  type="text"
+                  name="title"
+                  className="cms-input"
+                  onChange={handleFormChange}
+                />
+              </label>
 
             <button className="cms-upload-button">
               Update Header

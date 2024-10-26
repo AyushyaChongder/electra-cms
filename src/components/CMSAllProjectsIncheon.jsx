@@ -390,6 +390,15 @@ const handleRemoveImage = (index) => {
             className="cms-bannerimg-preview"
           />
         )}
+          <label>
+                Logo Alt Text:
+                <input
+                  type="text"
+                  name="title"
+                  className="cms-input"
+                  onChange={handleFormChange}
+                />
+              </label>
         <label>
           Project Images:
           {formData.images.map((image, index) => (
@@ -447,6 +456,15 @@ const handleRemoveImage = (index) => {
             Add Image
           </button>
         </label>
+        <label>
+                Alt Text For Images:
+                <textarea
+                  type="text"
+                  name="title"
+                  className="cms-input"
+                  onChange={handleFormChange}
+                />
+              </label>
         <button type="submit" className="cms-upload-button">
           {isEditing ? "Update Project" : "Add Project"}
         </button>

@@ -48,7 +48,7 @@ const CMSClients = () => {
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     const reader = new FileReader();
-    
+
     reader.onloadend = () => {
       setFormData((prevData) => ({
         ...prevData,
@@ -56,7 +56,7 @@ const CMSClients = () => {
         imagePreview: reader.result,
       }));
     };
-    
+
     if (file) {
       reader.readAsDataURL(file);
     }
@@ -68,15 +68,18 @@ const CMSClients = () => {
 
     const fileName = imageFile.name;
     const reader = new FileReader();
-    
+
     reader.onloadend = async () => {
       const fileData = reader.result.split(",")[1]; // Base64 file data
 
       try {
-        const response = await axios.post('https://b1fdsnzm5i.execute-api.ap-south-1.amazonaws.com/v1/uploadClientImageS3', {
-          file_name: fileName,
-          file_data: fileData,
-        });
+        const response = await axios.post(
+          "https://b1fdsnzm5i.execute-api.ap-south-1.amazonaws.com/v1/uploadClientImageS3",
+          {
+            file_name: fileName,
+            file_data: fileData,
+          }
+        );
 
         if (response.data.status_code === 200) {
           const newClient = {
@@ -87,7 +90,7 @@ const CMSClients = () => {
           handleCloseModal(); // Close modal after successful upload
         }
       } catch (err) {
-        console.error('Error uploading image:', err);
+        console.error("Error uploading image:", err);
       }
     };
 
@@ -122,18 +125,23 @@ const CMSClients = () => {
     try {
       // Assuming the client object has a src property which contains the URL
       const fileName = client.src.split("/").pop(); // Extract file name from URL
-  
+
       // Make a DELETE request to your API
-      const response = await axios.delete(`https://veiar5qy8i.execute-api.ap-south-1.amazonaws.com/v1/deleteClientLogo`, {
-        data: { file_name: fileName }, // Sending the file name in the request body
-      });
-  
+      const response = await axios.delete(
+        `https://veiar5qy8i.execute-api.ap-south-1.amazonaws.com/v1/deleteClientLogo`,
+        {
+          data: { file_name: fileName }, // Sending the file name in the request body
+        }
+      );
+
       if (response.status === 200) {
-        setClients((prevClients) => prevClients.filter(c => c.id !== client.id)); // Remove client from state
+        setClients((prevClients) =>
+          prevClients.filter((c) => c.id !== client.id)
+        ); // Remove client from state
         console.log("Client logo deleted successfully.");
       }
     } catch (error) {
-      console.error('Error deleting image:', error);
+      console.error("Error deleting image:", error);
     }
   };
 
@@ -211,13 +219,29 @@ const CMSClients = () => {
                 />
               </label>
               {formData.imagePreview && ( // Use formData.imagePreview
-                <img src={formData.imagePreview} alt="Preview" className="cms-bannerimg-preview" />
+                <img
+                  src={formData.imagePreview}
+                  alt="Preview"
+                  className="cms-bannerimg-preview"
+                />
               )}
-
+              <label>
+                Alt Text:
+                <input
+                  type="text"
+                  name="title"
+                  className="cms-input"
+                  onChange={handleFileChange}
+                />
+              </label>
               <button type="submit" className="cms-upload-button">
                 {isEditing ? "Update Client" : "Add Client"}
               </button>
-              <button type="button" className="cms-close-button" onClick={handleCloseModal}>
+              <button
+                type="button"
+                className="cms-close-button"
+                onClick={handleCloseModal}
+              >
                 Cancel
               </button>
             </form>
@@ -231,10 +255,16 @@ const CMSClients = () => {
             <h2>Confirm Submission</h2>
             <p>Are you sure you want to submit the changes?</p>
             <div className="cms-button-container">
-              <button className="cms-yes-button" onClick={handleConfirmModalSubmit}>
+              <button
+                className="cms-yes-button"
+                onClick={handleConfirmModalSubmit}
+              >
                 Yes
               </button>
-              <button className="cms-no-button" onClick={handleConfirmModalClose}>
+              <button
+                className="cms-no-button"
+                onClick={handleConfirmModalClose}
+              >
                 No
               </button>
             </div>
